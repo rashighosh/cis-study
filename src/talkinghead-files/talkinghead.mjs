@@ -33,6 +33,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { retarget } from './retargeter.mjs';
 import{ DynamicBones } from './dynamicbones.mjs';
+import './lipsync-en.mjs';
 const workletUrl = new URL('./playback-worklet.js', import.meta.url);
 
 // Temporary objects for animation loop
