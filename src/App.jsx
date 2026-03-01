@@ -107,6 +107,7 @@ export default function App() {
       await speakWithLipsync(data.reply);
       setMessages(m => [...m, { from: "doctor", text: data.reply }]);
     } catch (error) {
+      console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
     } finally {
       setIsTyping(false);

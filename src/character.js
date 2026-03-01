@@ -5,6 +5,16 @@ const BASE_URL = 'https://fastapi-rashi.onrender.com';
 let head = null;
 let head1 = null;
 
+document.addEventListener('click', () => {
+  console.log("Making sure audio will work ...")
+  if (head.audioCtx?.state === 'suspended') {
+    head.audioCtx.resume();
+  }
+  if (head1.audioCtx?.state === 'suspended') {
+    head1.audioCtx.resume();
+  }
+}, { once: true });  // only needs to happen once
+
 export async function initDoctorCharacter(containerNode) {
   head = new TalkingHead(containerNode, {
     lipsyncModules: ['en'],
