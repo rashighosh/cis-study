@@ -1,52 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from './api/llm.js';
-import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync } from './character.js';
+import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, stopCompanionGesture } from './character.js';
 import './css/App.css';
 
-const DOCTOR_RESPONSES = {
-  default: "I'm Dr. Alex, your clinical trials guide. Ask me anything about how clinical trials work, eligibility, phases, or what to expect as a participant.",
-  eligibility: "Eligibility for clinical trials depends on inclusion and exclusion criteria — things like age, diagnosis, medical history, and sometimes prior treatments. The trial's team will screen you through interviews and medical records.",
-  phases: "Clinical trials run in 4 phases. Phase I tests safety in a small group. Phase II expands to test effectiveness. Phase III compares against standard treatments. Phase IV happens after approval to monitor long-term effects.",
-  risks: "Every trial carries some risk — side effects from experimental treatments, time commitment, and uncertainty about outcomes. However, trials also offer access to cutting-edge treatments and close medical monitoring.",
-  consent: "Informed consent means you fully understand the trial before agreeing to join. You'll receive detailed documents, have time to ask questions, and can withdraw at any time without affecting your regular care.",
-  compensation: "Compensation varies widely. Some trials pay for time and travel. Others only cover medical costs. It's always appropriate to ask the research team upfront what's covered.",
+const GESTURE_COLORS = {
+  ready:    "#868686",
+  thinking: "#b67300",
+  thumbsup: "#008357",
+  shrug:    "#6366f1",
 };
-
-const EMOJI_MAP = { smile: "😊", think: "🤔", frown: "😟" };
-
-
-function getResponse(text) {
-  const t = text.toLowerCase();
-  if (t.includes("eligib") || t.includes("qualify") || t.includes("who can")) return DOCTOR_RESPONSES.eligibility;
-  if (t.includes("phase") || t.includes("stage")) return DOCTOR_RESPONSES.phases;
-  if (t.includes("risk") || t.includes("safe") || t.includes("danger") || t.includes("side effect")) return DOCTOR_RESPONSES.risks;
-  if (t.includes("consent") || t.includes("sign") || t.includes("agree") || t.includes("rights")) return DOCTOR_RESPONSES.consent;
-  if (t.includes("pay") || t.includes("money") || t.includes("compens") || t.includes("cost")) return DOCTOR_RESPONSES.compensation;
-  return DOCTOR_RESPONSES.default;
-}
-
-const SUGGESTED = [
-  "What are the phases of a clinical trial?",
-  "Who is eligible to join a trial?",
-  "What risks should I know about?",
-  "Do participants get compensated?",
-  "What does informed consent mean?",
-];
 
 export default function App() {
   const [messages, setMessages] = useState([
-    { from: "doctor", text: DOCTOR_RESPONSES.default }
+    { from: "doctor", text: "I'm Dr. Alex, your clinical trials guide. Ask me anything about how clinical trials work, eligibility, phases, or what to expect as a participant." }
   ]);
   const [input, setInput] = useState("");
   const [showTip, setShowTip] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const chatRef = useRef(null);
   const messagesRef = useRef(null);
+  const currentGesture = useRef("ready");
   const tipTimeout = useRef(null);
   const [reaction, setReaction] = useState({
+    gesture: "ready",
     label: "ready",
-    color: "#94a3b8",
-    emoji: "smile",
+    color: GESTURE_COLORS["ready"],
     tip: null,
     suggestions: null,
   });
@@ -66,22 +44,32 @@ export default function App() {
   useEffect(() => {
     if (!input.trim() || input.length <= 5) {
       setReaction({
+        gesture: "ready",
         label: "ready",
-        color: "#94a3b8",
-        emoji: "smile",
+        color: GESTURE_COLORS["ready"],
         tip: null,
         suggestions: null,
       });
+      currentGesture.current = "ready";
+      stopCompanionGesture();
       setShowTip(false);
       return;
     }
-
+    if (currentGesture.current !== "thinking") {
+      currentGesture.current = "thinking";
+      playGesture('thinking');
+    }
     clearTimeout(tipTimeout.current);
     tipTimeout.current = setTimeout(async () => {
       try {
         const data = await precheckQuestion(input);
         console.log("DATA FROM PRECHECK IS", data)
-        setReaction(data); // data is already { label, tip, color, emoji }
+        var newReactionState = data
+        newReactionState["color"] = GESTURE_COLORS[data.gesture]
+        console.log("NEW REACTION STATE IS", newReactionState)
+        setReaction(newReactionState); // data is already { label, tip, color, emoji }
+        currentGesture.current = data.gesture;
+        playGesture(data.gesture);
         setShowTip(true);
       } catch {
         // silently fail — don't disrupt the user
@@ -96,12 +84,11 @@ export default function App() {
   const handleSubmit = async () => {
     if (!input.trim()) return;
     const userMsg = input.trim();
-    playGesture('shrug');
     setMessages(m => [...m, { from: "user", text: userMsg }]);
     setInput("");
+    playGesture('lookup')
     setShowTip(false);
     setIsTyping(true);
-
     try {
       const data = await submitQuestion(userMsg);
       await speakWithLipsync(data.reply);
@@ -129,7 +116,7 @@ export default function App() {
       <div className="panel">
 
         {/* Doctor Header */}
-        <div className="doctor-header">
+        {/* <div className="doctor-header">
           <div>
             <div className="doctor-name">Dr. Alex</div>
             <div className="doctor-status">
@@ -137,7 +124,7 @@ export default function App() {
               Clinical Research Specialist · Online
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Chat Area */}
         <div className="chat" ref={chatRef}>            
