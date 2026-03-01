@@ -1,12 +1,12 @@
 import { TalkingHead } from './talkinghead-files/talkinghead.mjs';
 
+// const BASE_URL = 'https://fastapi-rashi.onrender.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 let head = null;
 let head1 = null;
-const google_tts_api_key = import.meta.env.VITE_GOOGLE_TTS_API_KEY;
 
 export async function initDoctorCharacter(containerNode) {
   head = new TalkingHead(containerNode, {
-    ttsApikey: google_tts_api_key,  // ← paste your key here
     lipsyncModules: ['en'],
     cameraView: 'mid' // full, mid, upper, head,
   });
@@ -25,7 +25,6 @@ export async function initDoctorCharacter(containerNode) {
 
 export async function initCompanionCharacter(containerNode) {
   head1 = new TalkingHead(containerNode, {
-    ttsApikey: google_tts_api_key,  // ← paste your key here
     lipsyncModules: ['en'],
     cameraView: 'upper' // full, mid, upper, head,
   });
@@ -63,6 +62,25 @@ export async function thinking() {
 export async function thumbsUp() {
   head1.stopGesture(3000);
   head1.playGesture('thumbup');
+}
+
+export async function speakWithLipsync(text) {
+  const ttsRes = await fetch(`${BASE_URL}/tts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const { audio, timestamps } = await ttsRes.json();
+
+  const audioBytes = Uint8Array.from(atob(audio), c => c.charCodeAt(0));
+  const audioBuffer = await head.audioCtx.decodeAudioData(audioBytes.buffer);
+
+  head.speakAudio({
+    audio: audioBuffer,
+    words: timestamps.map(t => t.word),
+    wtimes: timestamps.map(t => t.start * 1000),
+    wdurations: timestamps.map(t => (t.end - t.start) * 1000)
+  });
 }
 
 // map gesture names to functions

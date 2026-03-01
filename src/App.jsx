@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from './api/llm.js';
-import { initCompanionCharacter, initDoctorCharacter, playGesture } from './character.js';
+import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync } from './character.js';
 import './css/App.css';
 
 const DOCTOR_RESPONSES = {
@@ -104,6 +104,7 @@ export default function App() {
 
     try {
       const data = await submitQuestion(userMsg);
+      await speakWithLipsync(data.reply);
       setMessages(m => [...m, { from: "doctor", text: data.reply }]);
     } catch (error) {
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
