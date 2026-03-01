@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from './api/llm.js';
-import { initCompanionCharacter, initDoctorCharacter, speakText, stopCharacter } from './character.js';
+import { initCompanionCharacter, initDoctorCharacter, playGesture } from './character.js';
 import './css/App.css';
 
 const DOCTOR_RESPONSES = {
@@ -40,8 +40,8 @@ export default function App() {
   const [input, setInput] = useState("");
   const [showTip, setShowTip] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [companionAnim, setCompanionAnim] = useState(false);
   const chatRef = useRef(null);
+  const messagesRef = useRef(null);
   const tipTimeout = useRef(null);
   const [reaction, setReaction] = useState({
     label: "ready",
@@ -90,18 +90,17 @@ export default function App() {
   }, [input]);
 
   useEffect(() => {
-    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    if (messagesRef.current) messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
   }, [messages, isTyping]);
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
     const userMsg = input.trim();
+    playGesture('shrug');
     setMessages(m => [...m, { from: "user", text: userMsg }]);
     setInput("");
     setShowTip(false);
     setIsTyping(true);
-    setCompanionAnim(true);
-    setTimeout(() => setCompanionAnim(false), 600);
 
     try {
       const data = await submitQuestion(userMsg);
@@ -140,24 +139,20 @@ export default function App() {
 
         {/* Chat Area */}
         <div className="chat" ref={chatRef}>            
-          <div className="messages">
+          <div className="messages" ref={messagesRef}>
            {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`message-row message-row--${msg.from}`}
-            >
-              {msg.from === "doctor" && (
-                <div className="message-avatar">🩺</div>
-              )}
-              <div className={`message-bubble message-bubble--${msg.from}`}>
-                {msg.text}
+              <div key={i} className={`message-wrapper message-wrapper--${msg.from}`}>
+                <div className={`message-name`}>{msg.from === 'doctor' ? 'Dr. Alex' : 'You'}</div>
+                <div className={`message-row message-row--${msg.from}`}>
+                  <div className={`message-bubble message-bubble--${msg.from}`}>
+                    {msg.text}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           {isTyping && (
             <div className="message-row message-row--doctor">
-              <div className="message-avatar">🩺</div>
               <div className="typing-bubble">
                 {[0, 1, 2].map(i => (
                   <div
@@ -175,29 +170,12 @@ export default function App() {
           </div>
         </div>
 
-        {/* Suggestions */}
-        {r.suggestions && r.suggestions.length > 0 && (
-          <div className="suggestions">
-            {r.suggestions.map((s, i) => (
-              <button key={i} className="suggestion-btn" onClick={() => setInput(s)}>
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
-
         {/* Input Zone */}
         <div className="input-zone">
 
           {/* Companion row — CSS vars carry the dynamic color */}
           <div className="companion-row">
-            <div
-              className={`companion-avatar${companionAnim ? " companion-avatar--anim" : ""}`}
-              style={{ '--reaction-color': r.color }}
-            >
-              {EMOJI_MAP[r.emoji]}
-            </div>
-            <div className="virtual-character" ref={companionRef} />
+            <div className="virtual-companion" ref={companionRef} style={{ '--reaction-color': r.color }} />
 
             <div className="companion-info">
               <div className="companion-meta">
@@ -222,6 +200,17 @@ export default function App() {
               {!input && (
                 <div className="companion-placeholder">
                   I'll review your question as you type...
+                </div>
+              )}
+
+              {/* Suggestions */}
+              {r.suggestions && r.suggestions.length > 0 && (
+                <div className="suggestions">
+                  {r.suggestions.map((s, i) => (
+                    <button key={i} className="suggestion-btn" onClick={() => setInput(s)}>
+                      {s}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
