@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 .env
+package-lock.json
+
+# amplify
+.amplify
+amplify_outputs*
+amplifyconfiguration*
