@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from '../api/llm.js';
 import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, stopCompanionGesture } from '../character.js';
 import '../css/Interaction.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
 const GESTURE_COLORS = {
   ready:    "#868686",
@@ -115,17 +117,6 @@ export default function Interaction() {
       {/* Main Panel */}
       <div className="panel">
 
-        {/* Doctor Header */}
-        {/* <div className="doctor-header">
-          <div>
-            <div className="doctor-name">Dr. Alex</div>
-            <div className="doctor-status">
-              <span className="doctor-status__dot"></span>
-              Clinical Research Specialist · Online
-            </div>
-          </div>
-        </div> */}
-
         {/* Chat Area */}
         <div className="chat" ref={chatRef}>            
           <div className="messages" ref={messagesRef}>
@@ -222,7 +213,7 @@ export default function Interaction() {
               style={{
                 '--textarea-border': input
                   ? `${r.color}60`
-                  : 'rgba(148,163,184,0.15)'
+                  : 'rgba(255, 255, 255,0.35)'
               }}
             />
             <button
@@ -230,7 +221,7 @@ export default function Interaction() {
               onClick={handleSubmit}
               disabled={!input.trim()}
             >
-              →
+            <FontAwesomeIcon icon={faPaperPlane} />
             </button>
           </div>
 

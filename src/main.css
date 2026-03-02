@@ -1,11 +1,22 @@
+/* COLORS
+Dark Blue: rgb(0, 38, 87)
+Dark Purple: rgb(59, 15, 130)
+Orange: rgb(250 132 22)
+Yellow: rgb(242, 169, 0) */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Funnel Sans", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary-blue: 0 38 87;
+  --primary-purple: 59 15 130;
+  --primary-orange: 250 132 22;
+  --primary-yellow: 242 194 0;
+  --background-gradient: linear-gradient(135deg, rgba(var(--primary-orange) / 7%) 0%, rgba(var(--primary-yellow) / 1%) 50%, rgba(var(--primary-orange) / 7%) 100%);
+  --grey: 47 47 47;
+
+  background: var(--background-gradient);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +26,11 @@
 
 a {
   font-weight: 500;
-  color: #6c8970;
+  color: rgb(var(--primary-blue));
   text-decoration: inherit;
 }
 a:hover {
-  color: #6c8970;
+  color: rgb(var(--primary-purple));
 }
 
 body {
@@ -28,41 +39,4 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #63986a;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }

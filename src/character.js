@@ -1,7 +1,7 @@
 import { TalkingHead } from './talkinghead-files/talkinghead.mjs';
 
-// const BASE_URL = 'https://fastapi-rashi.onrender.com';
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = 'https://fastapi-rashi.onrender.com';
+// const BASE_URL = 'http://127.0.0.1:8000';
 let head = null;
 let head1 = null;
 
