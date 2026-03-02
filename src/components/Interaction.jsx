@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { submitQuestion, precheckQuestion } from './api/llm.js';
-import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, stopCompanionGesture } from './character.js';
-import './css/App.css';
+import { submitQuestion, precheckQuestion } from '../api/llm.js';
+import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, stopCompanionGesture } from '../character.js';
+import '../css/Interaction.css';
 
 const GESTURE_COLORS = {
   ready:    "#868686",
@@ -10,7 +10,7 @@ const GESTURE_COLORS = {
   shrug:    "#6366f1",
 };
 
-export default function App() {
+export default function Interaction() {
   const [messages, setMessages] = useState([
     { from: "doctor", text: "I'm Dr. Alex, your clinical trials guide. Ask me anything about how clinical trials work, eligibility, phases, or what to expect as a participant." }
   ]);
