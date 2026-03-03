@@ -22,7 +22,10 @@ export async function initDoctorCharacter(containerNode) {
     cameraRotateEnable: false,
     cameraPanEnable: false,
     cameraZoomEnable: false,
-    cameraDistance: -1
+    avatarSpeakingEyeContact: 1,
+    avatarIdleEyeContact: 1,
+    cameraDistance: -1,
+    avatarIdleHeadMove: 1
   });
 
   await head.showAvatar({
@@ -92,6 +95,12 @@ export async function lookup() {
   head1.playGesture('lookup');
 }
 
+export async function headNod() {
+  console.log("in head nod!")
+  head.playGesture('yes', 5, false, 1500);
+  // head.playAnimation('/animations/Looking Around.fbx')
+}
+
 export async function stopCompanionGesture() {
   head1.stopGesture(3000);
 }
@@ -121,7 +130,8 @@ export const gestures = {
   thumbsup,
   thinking,
   ready,
-  lookup
+  lookup,
+  headNod
   // add more here
 };
 

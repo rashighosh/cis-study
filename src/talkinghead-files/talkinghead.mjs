@@ -324,6 +324,10 @@ class TalkingHead {
       'lookup': {
         'Neck.rotation':{x:0.027, y:-0.35, z:0}, 'Head.rotation':{x:-0.1, y:-0.065, z:0}, 
         'Spine.rotation':{x:-0.123, y:-0.3, z:-0.018}, 'Spine1.rotation':{x:0.002, y:-0.3, z:0.001}
+      },
+      'nod': {
+        'Neck.rotation':{x:[0.5, 1, 0.5, 1], y:-0.003, z:0.012}, 
+        'Head.rotation':{x:0.05, y:-0.02, z:-0.017}
       }
     }
 
@@ -703,7 +707,7 @@ class TalkingHead {
       '🤷': { link: '🤷‍♂️' },
       '🙏': { dt: [1500,300,1000], rescale: [0,1,0], vs:{ eyeBlinkLeft: [0,1], eyeBlinkRight: [0,1], bodyRotateX: [0], bodyRotateZ: [0.1], gesture: [["namaste",2],null] } },
         
-      'yes': { dt: [[200,500],[200,500],[200,500],[200,500]], vs:{ headMove: [0], headRotateX: [[0.1,0.2],0.1,[0.1,0.2],0], headRotateZ: [[-0.2,0.2]] } },
+      'yes': { dt: [[200,500],[200,700],[200,500],[200,500]], vs:{ headMove: [0], headRotateX: [[0.1,0.3],0.1,[0.1,0.3],0], headRotateZ: [[-0.2,0.2]] } },
       'no': { dt: [[200,500],[200,500],[200,500],[200,500],[200,500]], vs:{ headMove: [0], headRotateY: [[-0.1,-0.05],[0.05,0.1],[-0.1,-0.05],[0.05,0.1],0], headRotateZ: [[-0.2,0.2]] } }
 
     };
@@ -4207,7 +4211,7 @@ class TalkingHead {
   * @param {number} [delay=0] Delay in milliseconds
   * @param {number} [prob=1] Probability of hand movement
   */
-  speakWithHands(delay=0,prob=0.5) {
+  speakWithHands(delay=0,prob=0.7) {
 
     // Only if we are standing and not bending and probabilities match up
     if ( this.mixer || this.gesture || !this.poseTarget.template.standing || this.poseTarget.template.bend || Math.random()>prob ) return;
@@ -4412,10 +4416,14 @@ class TalkingHead {
       this.mixer.addEventListener('finished', this._mixerHandler);
 
       // Play action
-      const repeat = Math.ceil(dur / item.clip.duration);
+      // const repeat = Math.ceil(dur / item.clip.duration);
+      // const action = this.mixer.clipAction(item.clip);
+      // action.setLoop( THREE.LoopRepeat, repeat );
+      // action.clampWhenFinished = true;
+      // action.fadeIn(0.5).play();
       const action = this.mixer.clipAction(item.clip);
-      action.setLoop( THREE.LoopRepeat, repeat );
-      action.clampWhenFinished = true;
+      action.setLoop(THREE.LoopOnce);
+      action.clampWhenFinished = true; // holds final frame
       action.fadeIn(0.5).play();
 
     } else {
@@ -4478,9 +4486,11 @@ class TalkingHead {
 
     // Stop mixer
     if (this.mixer) {
+      console.log("GLITCH")
       this.mixer.removeEventListener('finished', this._mixerHandler);
-      this.mixer.stopAllAction();
-      this.mixer.uncacheRoot(this.armature);
+      //this.mixer.stopAllAction();
+      // console.log("BEFORE UNCACHE GLITCH")
+      //this.mixer.uncacheRoot(this.armature);
       this.mixer = null;
       this._mixerHandler = null;
     }

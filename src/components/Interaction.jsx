@@ -91,6 +91,7 @@ export default function Interaction() {
     playGesture('lookup')
     setShowTip(false);
     setIsTyping(true);
+    playGesture('headNod')
     try {
       const data = await submitQuestion(userMsg);
       await speakWithLipsync(data.reply);
