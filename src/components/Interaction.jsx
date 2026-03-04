@@ -169,11 +169,11 @@ export default function Interaction() {
     setShowCards(true);    
     try {
       const data = await submitQuestion(userMsg);
-      await speakWithLipsync(data.reply);
       playGesture('stopSwiping')
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 700ms anim + 1000ms dur
+      playGesture('headNod')
+      await speakWithLipsync(data.answer);
       setShowCards(false);
-      setMessages(m => [...m, { from: "doctor", text: data.reply }]);
+      setMessages(m => [...m, { from: "doctor", text: data.answer }]);
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
