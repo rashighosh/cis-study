@@ -90,6 +90,46 @@ export async function ready() {
   head1.playGesture('ok');
 }
 
+async function playSmoothSequence(head, sequence) {
+  for (const item of sequence) {
+    head.playGesture(item.name, item.dur, item.mirror, item.ms);
+    
+    // Overlap by 20ms to keep the engine's "exponential smoothing" active
+    const overlap = 20; 
+    const waitTime = (item.dur * 1000) - overlap;
+    
+    await new Promise(resolve => setTimeout(resolve, Math.max(0, waitTime)));
+  }
+}
+
+let isSwiping = false; // Our "Kill Switch"
+
+export async function startSwiping() {
+  if (isSwiping) return; // Prevent multiple loops starting at once
+  isSwiping = true;
+
+  // 1. Initial lift (only happens ONCE at the start)
+  await playSmoothSequence(head, [{ name: 'swipeReady', dur: 1, ms: 1000 }]);
+
+  // 2. The Repeat Loop
+  const loopMoves = [
+    { name: 'swipeDone',  dur: 0.9, ms: 2000 },
+    { name: 'swipeReady', dur: 0.9, ms: 2000 }
+  ];
+
+  while (isSwiping) {
+    await playSmoothSequence(head, loopMoves);
+  }
+
+  // 3. Final Drop (only happens ONCE when isSwiping becomes false)
+  await playSmoothSequence(head, [{ name: null, dur: 0, ms: 800 }]);
+}
+
+export function stopSwiping() {
+  isSwiping = false;
+  console.log("Swipe loop stopping...");
+}
+
 export async function lookup() {
   head1.stopGesture(3000);
   head1.playGesture('lookup');
@@ -131,7 +171,9 @@ export const gestures = {
   thinking,
   ready,
   lookup,
-  headNod
+  headNod,
+  startSwiping,
+  stopSwiping
   // add more here
 };
 

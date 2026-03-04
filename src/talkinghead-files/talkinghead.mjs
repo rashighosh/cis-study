@@ -319,7 +319,6 @@ class TalkingHead {
 
         // Look down
         'Neck.rotation':{x:0.5, y:0, z:0}
-
       },
       'lookup': {
         'Neck.rotation':{x:0.027, y:-0.35, z:0}, 'Head.rotation':{x:-0.1, y:-0.065, z:0}, 
@@ -328,6 +327,67 @@ class TalkingHead {
       'nod': {
         'Neck.rotation':{x:[0.5, 1, 0.5, 1], y:-0.003, z:0.012}, 
         'Head.rotation':{x:0.05, y:-0.02, z:-0.017}
+      },
+      'swipeReady': {
+        // LEFT SIDE
+        'LeftShoulder.rotation': { x: 0.5, y: -0.166, z: -1.605 },
+        'LeftArm.rotation': { x: 1.275, y: 0.544, z: -0.092 },
+        'LeftForeArm.rotation': { x: 0, y: 0, z:1 },
+        'LeftHand.rotation': { x: -0.225, y: -0.154, z: 0.11 },
+        // --- TOUCHSCREEN TAP (LEFT HAND) ---
+        'LeftHandThumb1.rotation': { x: 0.2, y: -0.2, z: 0.3 },   // Pulled away from palm
+        'LeftHandThumb2.rotation': { x: 0.1, y: 0, z: 0 }, 
+        'LeftHandThumb3.rotation': { x: 0.1, y: 0, z: 0 },
+
+        // INDEX: "The Tapper" - light curve for a natural touch
+        'LeftHandIndex1.rotation': { x: 0.3, y: 0, z: 0 }, 
+        'LeftHandIndex2.rotation': { x: 0.4, y: 0, z: 0 },
+        'LeftHandIndex3.rotation': { x: 0.2, y: 0, z: 0 },
+
+        // MIDDLE: Curled back significantly to clear the screen
+        'LeftHandMiddle1.rotation': { x: 0.8, y: 0, z: 0 },
+        'LeftHandMiddle2.rotation': { x: 1.0, y: 0, z: 0 },
+        'LeftHandMiddle3.rotation': { x: 0.7, y: 0, z: 0 },
+
+        // RING: Loosely curled
+        'LeftHandRing1.rotation': { x: 0.9, y: 0, z: 0 },
+        'LeftHandRing2.rotation': { x: 1.1, y: 0, z: 0 },
+        'LeftHandRing3.rotation': { x: 0.8, y: 0, z: 0 },
+
+        // PINKY: Most curled (natural hand "fan")
+        'LeftHandPinky1.rotation': { x: 1.0, y: 0, z: 0 },
+        'LeftHandPinky2.rotation': { x: 1.2, y: 0, z: 0 },
+        'LeftHandPinky3.rotation': { x: 0.9, y: 0, z: 0 }
+      },
+      'swipeDone': {
+        // 1. KEEP SHOULDER/UPPER ARM LOCKED (Prevents dropping/shifting)
+        'LeftShoulder.rotation': { x: 0.5, y: -0.166, z: -1.605 },
+        'LeftArm.rotation': { x: 1.275, y: 0.544, z: -0.092 },
+
+        // 2. FOREARM FLICK (The "Hammer" motion)
+        // We reduce Z (unbending the elbow) and increase Y (swinging it out)
+        'LeftForeArm.rotation': { x: -0.5, y: 0, z:1 },
+
+        // 3. WRIST FLICK (The "Snap")
+        // Increasing Z and Y here creates the follow-through whip
+        'LeftHand.rotation': { x: -1.225, y: -0.154, z: 0.11 },
+
+        // --- FINGERS REMAIN IN POSE ---
+        'LeftHandThumb1.rotation': { x: 0.2, y: -0.2, z: 0.3 },
+        'LeftHandThumb2.rotation': { x: 0.1, y: 0, z: 0 },
+        'LeftHandThumb3.rotation': { x: 0.1, y: 0, z: 0 },
+        'LeftHandIndex1.rotation': { x: 0.3, y: 0, z: 0 },
+        'LeftHandIndex2.rotation': { x: 0.4, y: 0, z: 0 },
+        'LeftHandIndex3.rotation': { x: 0.2, y: 0, z: 0 },
+        'LeftHandMiddle1.rotation': { x: 0.8, y: 0, z: 0 },
+        'LeftHandMiddle2.rotation': { x: 1.0, y: 0, z: 0 },
+        'LeftHandMiddle3.rotation': { x: 0.7, y: 0, z: 0 },
+        'LeftHandRing1.rotation': { x: 0.9, y: 0, z: 0 },
+        'LeftHandRing2.rotation': { x: 1.1, y: 0, z: 0 },
+        'LeftHandRing3.rotation': { x: 0.8, y: 0, z: 0 },
+        'LeftHandPinky1.rotation': { x: 1.0, y: 0, z: 0 },
+        'LeftHandPinky2.rotation': { x: 1.2, y: 0, z: 0 },
+        'LeftHandPinky3.rotation': { x: 0.9, y: 0, z: 0 }
       }
     }
 
@@ -708,8 +768,8 @@ class TalkingHead {
       '🙏': { dt: [1500,300,1000], rescale: [0,1,0], vs:{ eyeBlinkLeft: [0,1], eyeBlinkRight: [0,1], bodyRotateX: [0], bodyRotateZ: [0.1], gesture: [["namaste",2],null] } },
         
       'yes': { dt: [[200,500],[200,700],[200,500],[200,500]], vs:{ headMove: [0], headRotateX: [[0.1,0.3],0.1,[0.1,0.3],0], headRotateZ: [[-0.2,0.2]] } },
-      'no': { dt: [[200,500],[200,500],[200,500],[200,500],[200,500]], vs:{ headMove: [0], headRotateY: [[-0.1,-0.05],[0.05,0.1],[-0.1,-0.05],[0.05,0.1],0], headRotateZ: [[-0.2,0.2]] } }
-
+      'no': { dt: [[200,500],[200,500],[200,500],[200,500],[200,500]], vs:{ headMove: [0], headRotateY: [[-0.1,-0.05],[0.05,0.1],[-0.1,-0.05],[0.05,0.1],0], headRotateZ: [[-0.2,0.2]] } },
+      // Add this to your animation templates
     };
 
     // Morph targets
@@ -4848,7 +4908,6 @@ class TalkingHead {
       });
     }
   }
-
   /**
   * Dispose the instance.
   */
@@ -4924,5 +4983,4 @@ class TalkingHead {
   }
 
 }
-
 export { TalkingHead };
