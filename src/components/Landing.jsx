@@ -9,29 +9,29 @@ const steps = [
     id: 0,
     label: "CLINICAL TRIALS EDUCATION",
     title: "Chat With Virtual Characters",
-    body: "Welcome! This tool helps you learn about clinical trials through friendly, guided conversations with virtual characters.",
-    cta: "Let's get started",
+    body: "Welcome! This tool helps you explore what it means to participate in a clinical trial -- not for any specific trial, but so you're informed if you're ever faced with that decision. <br/> <br/> You will interact with two virtual characters, Jordan and Dr. Alex, in a conversation designed around <em>your values</em>.",
+    cta: "Meet the virtual characters",
   },
   {
     id: 1,
-    label: "WHAT YOU'LL LEARN",
-    title: "Understand Clinical Trials",
-    body: "Have you ever been asked to participate in a clinical trial, or wondered what that would even mean? This tool helps you learn about concepts and terms so you're ready if you're faced with that decision.",
-    cta: "Who will I talk to?",
+    label: "MEET THE VIRTUAL CHARACTERS",
+    title: "Jordan: What Are Your Values?",
+    body: "Jordan will work with you to figure out good questions to ask about clinical trials, centered around <em>your values</em>. You'll bring these questions to Dr. Alex.",
+    cta: "What will Dr. Alex do?",
   },
   {
     id: 2,
-    label: "MEET YOUR GUIDES",
-    title: "Virtual Characters, Real Conversations",
-    body: "You'll chat with a virtual doctor who can answer your questions about clinical trials, and a virtual companion by your side who helps you think through and shape your questions as you go.",
+    label: "MEET THE VIRTUAL CHARACTERS",
+    title: "Dr. Alex: Clear Answers from Trusted Sources",
+    body: "Dr. Alex will answer your questions about clinical trial concepts clearly and honestly, using trusted sources like the National Cancer Institute.",
     cta: "How does it work?",
   },
   {
     id: 3,
     label: "HOW IT WORKS",
-    title: "Simple. Conversational. Yours.",
-    body: "Start a conversation and ask anything — there are no wrong questions. You're not signing up for a trial, just building the understanding of what it would mean if you did.",
-    cta: "I'm ready",
+    title: "Understand your values. Get the answers you need.",
+    body: "Share what matters to you, and we'll build the questions that get you the answers you actually need. You're not signing up for anything — just building understanding.",
+    cta: "Meet Jordan",
   },
 ];
 
@@ -71,7 +71,7 @@ export default function Landing() {
       <div className={`landing-card ${animating ? "landing-card--hidden" : ""}`}>
         <h2>{step.label}</h2>
         <h1>{step.title}</h1>
-        <p className="landing-body">{step.body}</p>
+        <p className="landing-body"   dangerouslySetInnerHTML={{ __html: step.body }}></p>
         <div className="landing-buttons">
             <button className="landing-button" onClick={isLast ? handleStart : advance}>
                 {step.cta} <FontAwesomeIcon size="xs" icon={faArrowRight} />

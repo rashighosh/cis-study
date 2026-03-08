@@ -93,6 +93,7 @@ export default function Interaction() {
   const [showTip, setShowTip] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [showCards, setShowCards] = useState(false);
+  const abortController = useRef(null);
   const chatRef = useRef(null);
   const messagesRef = useRef(null);
   const currentGesture = useRef("ready");
@@ -118,7 +119,7 @@ export default function Interaction() {
   }, []);
 
   useEffect(() => {
-    if (!input.trim() || input.length <= 5) {
+    if (!input.trim()) {
       setReaction({
         gesture: "ready",
         label: "ready",
@@ -137,8 +138,10 @@ export default function Interaction() {
     }
     clearTimeout(tipTimeout.current);
     tipTimeout.current = setTimeout(async () => {
+      if (abortController.current) abortController.current.abort();
+      abortController.current = new AbortController();
       try {
-        const data = await precheckQuestion(input);
+        const data = await precheckQuestion(input, abortController.current.signal);
         console.log("DATA FROM PRECHECK IS", data)
         var newReactionState = data
         newReactionState["color"] = GESTURE_COLORS[data.gesture]
@@ -147,8 +150,8 @@ export default function Interaction() {
         currentGesture.current = data.gesture;
         playGesture(data.gesture);
         setShowTip(true);
-      } catch {
-        // silently fail — don't disrupt the user
+      } catch (e) {
+        if (e.name === 'AbortError') return; // ignore cancelled requests
       }
     }, 800);
   }, [input]);

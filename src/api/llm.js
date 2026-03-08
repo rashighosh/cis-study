@@ -32,7 +32,7 @@ export async function submitQuestion(message) {
   return data;
 }
 
-export async function precheckQuestion(message) {
+export async function precheckQuestion(message, signal) {
     var body = {
         'thread_id': "kuromi123",
         'message': message
@@ -41,6 +41,7 @@ export async function precheckQuestion(message) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    signal
   });
 
   if (!response.ok) throw new Error('Precheck failed');
