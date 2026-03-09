@@ -19,6 +19,13 @@ const CARDS = [
   { id: 4, title: "Searching HHS", subtitle: "Department of Health & Human Services resources" },
 ];
 
+const GOOD_TIPS = [
+  "This question looks good!",
+  "I like this -- good question!",
+  "That's a great question!",
+  "I think this is a solid question!",
+];
+
 const CYCLE_MS = 1900;
 const CARD_WIDTH = 200;
 const FIRST_PAUSE_MS = 900; // how long first card lingers
@@ -90,6 +97,7 @@ export default function Interaction() {
     { from: "doctor", text: "I'm Dr. Alex, your clinical trials guide. Ask me anything about how clinical trials work, eligibility, phases, or what to expect as a participant." }
   ]);
   const [input, setInput] = useState("");
+  const [buttonFlag, setButtonFlag] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [showCards, setShowCards] = useState(false);
@@ -118,6 +126,26 @@ export default function Interaction() {
   }, []);
 
 useEffect(() => {
+    if (buttonFlag) {
+      console.log("BUTTON FLAG!", buttonFlag)
+      // manually set whatever reaction state you want for button-populated input
+      console.log("GOING TO SET REACTION")
+      var newReaction = {
+        gesture: "thumbsup",
+        label: "good",
+        color: GESTURE_COLORS["thumbsup"],
+        tip: GOOD_TIPS[Math.floor(Math.random() * GOOD_TIPS.length)],
+        suggestions: null,
+      }
+      console.log("NEW REACTION STATE IS", newReaction)
+      setReaction(newReaction);
+      playGesture("thumbsup");
+      currentGesture.current = "thumbsup";
+
+      setShowTip(true);
+      setButtonFlag(false); // reset the flag after handling
+      return;
+    }
     if (!input.trim()) {
       setReaction({
         gesture: "ready",
@@ -267,7 +295,7 @@ useEffect(() => {
               {r.suggestions && r.suggestions.length > 0 && (
                 <div className="suggestions">
                   {r.suggestions.map((s, i) => (
-                    <button key={i} className="suggestion-btn" onClick={() => setInput(s)}>
+                    <button key={i} className="suggestion-btn" onClick={() => {setInput(s); setButtonFlag(true)}}>
                       {s}
                     </button>
                   ))}
