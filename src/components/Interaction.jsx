@@ -105,6 +105,7 @@ export default function Interaction() {
   const tipTimeout = useRef(null);
   const messagesRef = useRef(null);
   const currentGesture = useRef("ready");
+  const [companionDismissed, setCompanionDismissed] = useState(false);
   const [reaction, setReaction] = useState({
     gesture: "ready",
     label: "ready",
@@ -187,6 +188,7 @@ useEffect(() => {
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
+    setCompanionDismissed(true);
     const userMsg = input.trim();
     setMessages(m => [...m, { from: "user", text: userMsg }]);
     setInput("");
@@ -202,6 +204,7 @@ useEffect(() => {
       await speakWithLipsync(data.answer);
       setShowCards(false);
       setMessages(m => [...m, { from: "doctor", text: data.answer }]);
+      setCompanionDismissed(false);
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
@@ -262,7 +265,7 @@ useEffect(() => {
         <div className="input-zone">
 
           {/* Companion row — CSS vars carry the dynamic color */}
-          <div className="companion-row">
+          <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
             <div className="virtual-companion" ref={companionRef} style={{ '--reaction-color': r.color }} />
 
             <div className="companion-info">
