@@ -136,6 +136,17 @@ export async function lookup() {
   head1.playGesture('lookup');
 }
 
+export async function lookdown() {
+  head1.stopGesture(1500);
+  head1.playGesture('lookdown', Infinity, false, 1500);
+}
+
+export async function indexFingerRaise() {
+  head1.stopGesture(1500);
+  head1.playGesture('indexFingerRaise', Infinity, false, 1500);
+}
+
+
 export async function headNod() {
   console.log("in head nod!")
   head.playGesture('yes', 5, false, 1500);
@@ -152,16 +163,37 @@ export async function speakWithLipsync(text) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text })
   });
+  
   const { audio, timestamps } = await ttsRes.json();
+  
+  // Debugging logs to verify synchronization
+  console.log("Total words received:", timestamps.length);
+  const lastWord = timestamps[timestamps.length - 1];
+  console.log("Lipsync expected to end at:", lastWord?.end, "seconds");
 
   const audioBytes = Uint8Array.from(atob(audio), c => c.charCodeAt(0));
   const audioBuffer = await head.audioCtx.decodeAudioData(audioBytes.buffer);
+  console.log("Actual audio duration:", audioBuffer.duration, "seconds");
 
-  head.speakAudio({
-    audio: audioBuffer,
-    words: timestamps.map(t => t.word),
-    wtimes: timestamps.map(t => t.start * 1000),
-    wdurations: timestamps.map(t => (t.end - t.start) * 1000)
+  // Prepare data for TalkingHead
+  const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
+  const wtimes = timestamps.map(t => t.start * 1000); // ms
+  const wdurations = timestamps.map(t => (t.end - t.start) * 1000); // ms
+
+  // Pass to TalkingHead speakAudio(data, options)
+  head.speakAudio(
+    {
+      audio: audioBuffer,
+      words: words,
+      wtimes: wtimes,
+      wdurations: wdurations
+    }, 
+    { isRaw: true } // Skips internal sentence-dividing logic
+  );
+
+  return new Promise(resolve => {
+    // Wait for the actual audio duration before resolving
+    setTimeout(resolve, audioBuffer.duration * 1000);
   });
 }
 
@@ -198,6 +230,8 @@ export const gestures = {
   thinking,
   ready,
   lookup,
+  lookdown,
+  indexFingerRaise,
   headNod,
   startSwiping,
   stopSwiping
@@ -205,5 +239,6 @@ export const gestures = {
 };
 
 export function playGesture(name) {
+  console.log("Gesture triggered:", name)
   gestures[name]?.();
 }

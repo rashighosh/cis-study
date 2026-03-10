@@ -320,9 +320,44 @@ class TalkingHead {
         // Look down
         'Neck.rotation':{x:0.5, y:0, z:0}
       },
+      'lookdown': {
+        // Look down
+        'Neck.rotation':{x:0.5, y:0, z:0},
+      },
       'lookup': {
         'Neck.rotation':{x:0.027, y:-0.35, z:0}, 'Head.rotation':{x:-0.1, y:-0.065, z:0}, 
         'Spine.rotation':{x:-0.123, y:-0.3, z:-0.018}, 'Spine1.rotation':{x:0.002, y:-0.3, z:0.001}
+      },
+      'indexFingerRaise': {
+        'RightShoulder.rotation':{x:[1.5,2,1,2], y:[-0.2,-0.4,1,2], z:[1.5,1.3,1,2]}, 
+        'RightArm.rotation':{x:[1.5,1.7,1,2], y:[0.6,0.4,1,2], z:[-1,-1.2,1,2]}, 
+        'RightForeArm.rotation':{x:-0.815, y:[0.4,0,1,2], z:-1.575}, 
+        'RightHand.rotation':{x:-0.529, y:0.2, z:-0.022}, 
+
+        // Thumb — tucked to side of fist
+        'RightHandThumb1.rotation':{x:0, y:-1.5, z:-0.8}, 
+        'RightHandThumb2.rotation':{x:0.3, y:0.0, z:-0.2}, 
+        'RightHandThumb3.rotation':{x:0.1, y:0.0, z:-0.1}, 
+
+        // Index finger — straight/extended (pointing up)
+        'RightHandIndex1.rotation':{x:0.0, y:0.0, z:0.0}, 
+        'RightHandIndex2.rotation':{x:0.0, y:0.0, z:0.0}, 
+        'RightHandIndex3.rotation':{x:0.0, y:0.0, z:0.0}, 
+
+        // Middle finger — curled into fist
+        'RightHandMiddle1.rotation':{x:1.4, y:0.1, z:0.08}, 
+        'RightHandMiddle2.rotation':{x:1.3, y:0.0, z:0.05}, 
+        'RightHandMiddle3.rotation':{x:0.8, y:0.0, z:0.0}, 
+
+        // Ring finger — curled into fist
+        'RightHandRing1.rotation':{x:1.4, y:0.2, z:0.12}, 
+        'RightHandRing2.rotation':{x:1.3, y:0.0, z:0.07}, 
+        'RightHandRing3.rotation':{x:0.8, y:0.0, z:0.0}, 
+
+        // Pinky — curled into fist
+        'RightHandPinky1.rotation':{x:1.4, y:0.3, z:0.2}, 
+        'RightHandPinky2.rotation':{x:1.3, y:0.0, z:0.0}, 
+        'RightHandPinky3.rotation':{x:0.8, y:0.0, z:0.0}
       },
       'nod': {
         'Neck.rotation':{x:[0.5, 1, 0.5, 1], y:-0.003, z:0.012}, 

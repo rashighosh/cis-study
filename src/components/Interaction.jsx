@@ -91,13 +91,15 @@ export default function Interaction() {
     }
     console.log("USER IS TYPING")
     focusCharacter(2)
-    if (currentGesture.current !== "thinking") {
-      currentGesture.current = "thinking";
-      playGesture('thinking');
+    if (currentGesture.current !== "lookdown") {
+      currentGesture.current = "lookdown";
+      playGesture('lookdown');
     }
     clearTimeout(tipTimeout.current);
     tipTimeout.current = setTimeout(async () => {
       try {
+        playGesture("thinking")
+        currentGesture.current = "thinking"
         const data = await precheckQuestion(input);
         console.log("DATA FROM PRECHECK IS", data)
         var newReactionState = data
@@ -105,7 +107,11 @@ export default function Interaction() {
         console.log("NEW REACTION STATE IS", newReactionState)
         setReaction(newReactionState); // data is already { label, tip, color, emoji }
         currentGesture.current = data.gesture;
-        playGesture(data.gesture);
+        if (data.gesture !== "thumbsup") {
+          playGesture("indexFingerRaise")
+        } else {
+          playGesture(data.gesture);
+        }
         setShowTip(true);
       } catch {
         // silently fail — don't disrupt the user
@@ -132,17 +138,19 @@ export default function Interaction() {
     setShowCards(true);    
     try {
       const data = await submitQuestion(userMsg);
-      await speakWithLipsync(data.answer);
       playGesture('stopSwiping')
       playGesture('headNod')
       setShowCards(false);
       setMessages(m => [...m, { from: "doctor", text: data.answer }]);
+      setIsTyping(false);
+      // Do this:
+      await speakWithLipsync(data.answer);
       setCompanionDismissed(false);
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
     } finally {
-      setIsTyping(false);
+      console.log("DONE")
     }
   };
 
@@ -200,7 +208,7 @@ export default function Interaction() {
           {/* Companion row — CSS vars carry the dynamic color */}
           <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
             <div className="virtual-companion-wrapper">
-              <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} />
+              <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => playGesture(currentGesture.current)} />
             </div>
 
             <div className="companion-popout" style={{ '--reaction-color': r.color }}>

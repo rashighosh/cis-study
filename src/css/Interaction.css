@@ -251,7 +251,7 @@
   align-items: flex-start;
   gap: 12px;
   transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;  
-  max-height: 200px;
+  max-height: 300px;
   overflow: visible;
   position: relative;
 }
@@ -264,18 +264,22 @@
 }
 
 .virtual-companion {
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.virtual-companion > canvas {
+  width: 300px;
 }
 
 .virtual-companion-wrapper {
   position: relative;
   display: flex;
   flex-shrink: 0;
-  width: 150px;
+  /* width: 250px; */
 }
 
 .companion-info {
