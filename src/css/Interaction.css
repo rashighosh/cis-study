@@ -119,9 +119,15 @@
   align-items: center;
 }
 
-/* .virtual-doctor canvas {
-  border-left: 1px solid rgb(206, 193, 193);
-} */
+#virtualdoctor > canvas,
+#virtualcompanion > canvas {
+  transition: filter 0.5s ease-in-out;
+}
+
+.dim {
+  filter: brightness(65%);
+  transition: .2s ease-in-out;
+}
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -246,7 +252,8 @@
   gap: 12px;
   transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;  
   max-height: 200px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
 }
 
 .companion-row--dismissed {
@@ -264,16 +271,12 @@
   align-items: center;
 }
 
-.virtual-companion canvas {
-  border-radius: 50%;
-  box-shadow: rgba(var(--grey) / 25%) 0px 5px 15px;
-  border: 2px solid var(--reaction-color);
+.virtual-companion-wrapper {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  width: 150px;
 }
-
-/*
- * .companion-avatar uses CSS custom property --reaction-color
- * set inline in JSX: style={{ '--reaction-color': r.color }}
- */
 
 .companion-info {
   flex: 1;
@@ -334,12 +337,51 @@
   font-style: italic;
 }
 
+.companion-popout {
+  position: absolute;
+  left: calc(150px + 12px);
+  width: calc(100% - 150px - 12px); /* now 100% = companion-row width ✓ */
+  top: 50%;
+  transform: translateY(-50%) scale(0.94);
+  transform-origin: left center;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  padding: 14px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease, transform 0.5s ease;
+  z-index: 10;
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.companion-popout-arrow {
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #fff;
+  filter: drop-shadow(-2px 0px 1px rgba(0,0,0,0.07));
+}
+
+.virtual-companion-wrapper:hover ~ .companion-popout,
+.companion-popout:hover {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+  transition: opacity 0.15s ease, transform 0.2s ease;
+}
+
 /* ─── Input Row ──────────────────────────────────────── */
 .input-row {
   display: flex;
   gap: 10px;
   align-items: stretch;
-  margin: 9px 0;
 }
 
 .input-textarea {
@@ -397,6 +439,7 @@ textarea::placeholder {
   font-size: 11px;
   color: var(--grey);
   text-align: center;
+  margin-top: 7px;
 }
 
 .swipe-cards {

@@ -123,7 +123,7 @@ export async function startSwiping() {
   }
 
   // 3. Final Drop (only happens ONCE when isSwiping becomes false)
-  await playSmoothSequence(head, [{ name: null, dur: 0, ms: 800 }]);
+  await playSmoothSequence(head, [{ name: null, dur: 0, ms: 200 }]);
 }
 
 export function stopSwiping() {
@@ -163,6 +163,32 @@ export async function speakWithLipsync(text) {
     wtimes: timestamps.map(t => t.start * 1000),
     wdurations: timestamps.map(t => (t.end - t.start) * 1000)
   });
+}
+
+export async function focusCharacter(character) {
+  console.log("WE ARE IN FOCUS CHARACTER", character)
+  if (character === 1) {
+      head.setLighting({
+        lightDirectIntensity: 45,   // Dim directional light,
+        lightSpotIntensity: 45,
+      })
+      head1.setLighting({
+        lightDirectIntensity: 0,   // Dim directional light
+      })
+      document.querySelector("#virtualcompanion > canvas").classList.add("dim")
+      
+      document.querySelector("#virtualdoctor > canvas").classList.remove("dim")
+  } else if (character===2) {
+    head.setLighting({
+      lightDirectIntensity: 0,   // Dim directional light
+    })
+    head1.setLighting({
+      lightDirectIntensity: 45,   // Dim directional light
+      lightSpotIntensity: 45,
+    })
+    document.querySelector("#virtualcompanion > canvas").classList.remove("dim")
+    document.querySelector("#virtualdoctor > canvas").classList.add("dim")
+  }
 }
 
 // map gesture names to functions
