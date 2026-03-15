@@ -130,3 +130,90 @@
   width: 24px;
   background: rgb(var(--grey));
 }
+
+.landing-llm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.landing-prompt {
+  margin-bottom: 0;
+}
+
+.landing-textarea {
+  width: 55%;
+  min-height: 100px;
+  padding: 14px 18px;
+  font-size: 18px;
+  font-family: "Funnel Sans", sans-serif;
+  color: rgb(var(--grey));
+  background: transparent;
+  border: 1px solid rgb(var(--grey) / 30%);
+  border-radius: 5px;
+  resize: none;
+  line-height: 1.4;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.landing-textarea:focus {
+  border-color: rgb(var(--grey) / 70%);
+}
+
+.landing-textarea::placeholder {
+  color: rgb(var(--grey) / 40%);
+}
+
+.landing-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.landing-llm-loading {
+  font-size: 16px;
+  color: rgb(var(--grey) / 50%);
+  font-style: italic;
+  margin: 0;
+}
+
+.landing-llm-response {
+  width: 55%;
+  text-align: left;
+  border-left: 2px solid rgb(var(--primary-purple));
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.landing-llm-speaker {
+  font-family: "Epilogue", sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgb(var(--primary-purple));
+  font-weight: 500;
+}
+
+.landing-llm-response p {
+  font-size: 20px;
+  color: rgb(var(--grey));
+  line-height: 1.4;
+  margin: 0;
+}
+
+.landing-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.landing-companion {
+  height: 280px;
+  width: 280px;
+  margin-bottom: 8px;
+}

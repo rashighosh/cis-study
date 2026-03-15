@@ -78,19 +78,6 @@
   flex: 0 0 auto;
 }
 
-
-/* .panel > *:first-child {
-  flex: 1;
-}
-
-.panel > *:nth-child(2) {
-  flex: 4;
-}
-
-.panel > *:last-child {
-  flex: 1;
-} */
-
 /* ─── Chat Area ──────────────────────────────────────── */
 .chat {
   display: flex;
@@ -125,7 +112,8 @@
 }
 
 .dim {
-  filter: brightness(65%);
+  filter: brightness(85%) blur(3px);
+  opacity: 0.5; /* Makes them 50% transparent */
   transition: .2s ease-in-out;
 }
 
@@ -138,7 +126,6 @@
   flex-direction: column;
   padding: 20px 24px;
   overflow-y: auto;
-  max-height: 550px;
   gap: 1rem;
 }
 
@@ -340,6 +327,31 @@
   color: #475569;
   font-style: italic;
 }
+
+.companion-thinking-bubble {
+  position: absolute;
+  left: calc(150px + 12px);
+  top: 20px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 8px 12px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.companion-thinking-bubble span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #94a3b8;
+  animation: thinking-dot 1.2s infinite ease-in-out;
+}
+
+.companion-thinking-bubble span:nth-child(2) { animation-delay: 0.2s; }
+.companion-thinking-bubble span:nth-child(3) { animation-delay: 0.4s; }
 
 .companion-popout {
   position: absolute;

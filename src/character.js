@@ -1,20 +1,20 @@
 import { TalkingHead } from './talkinghead-files/talkinghead.mjs';
 
 // const BASE_URL = 'https://fastapi-rashi.onrender.com';
-// const BASE_URL = 'http://127.0.0.1:8000';
-const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
+const BASE_URL = 'http://127.0.0.1:8000';
+// const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
 let head = null;
 let head1 = null;
 
 document.addEventListener('click', () => {
   console.log("Making sure audio will work ...")
-  if (head.audioCtx?.state === 'suspended') {
+  if (head?.audioCtx?.state === 'suspended') {
     head.audioCtx.resume();
   }
-  if (head1.audioCtx?.state === 'suspended') {
+  if (head1?.audioCtx?.state === 'suspended') {
     head1.audioCtx.resume();
   }
-}, { once: true });  // only needs to happen once
+}, { once: true });
 
 export async function initDoctorCharacter(containerNode) {
   head = new TalkingHead(containerNode, {
@@ -37,19 +37,22 @@ export async function initDoctorCharacter(containerNode) {
     ttsVoice: 'en-GB-Standard-A',
     lipsyncLang: 'en',
   });
+  focusCharacter(2)
 
   return head;
 }
 
-export async function initCompanionCharacter(containerNode) {
+export async function initCompanionCharacter(containerNode, gesture="thumbsup") {
   head1 = new TalkingHead(containerNode, {
     lipsyncModules: ['en'],
-    cameraView: 'upper', // full, mid, upper, head,
+    cameraView: 'mid', // full, mid, upper, head,
+    avatarSpeakingHeadMove: 1,
     cameraRotateEnable: false,
     cameraPanEnable: false,
     cameraZoomEnable: false,
-    cameraDistance: -1
+    cameraDistance: -1,
   });
+  console.log("HEAD 1 IS", head1)
 
   await head1.showAvatar({
     url: '/character-models/male.glb',
@@ -59,6 +62,8 @@ export async function initCompanionCharacter(containerNode) {
     ttsVoice: 'en-GB-Standard-A',
     lipsyncLang: 'en',
   });
+
+  playGesture(gesture)
 
   return head1;
 }
@@ -83,7 +88,11 @@ export async function thinking() {
 
 export async function thumbsup() {
   head1.stopGesture(3000);
-  head1.playGesture('thumbup');
+  head1.playGesture('thumbup', Infinity, false, 1500);
+}
+
+export async function wave() {
+  head1.playGesture('handup');
 }
 
 export async function ready() {
@@ -157,42 +166,88 @@ export async function stopCompanionGesture() {
   head1.stopGesture(3000);
 }
 
-export async function speakWithLipsync(text) {
+export async function speakWithLipsync(text, character = 'doctor') {
+  const activeHead = character === 'companion' ? head1 : head;
+
   const ttsRes = await fetch(`${BASE_URL}/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text })
+    body: JSON.stringify({ text, character })
   });
   
   const { audio, timestamps } = await ttsRes.json();
   
-  // Debugging logs to verify synchronization
   console.log("Total words received:", timestamps.length);
   const lastWord = timestamps[timestamps.length - 1];
   console.log("Lipsync expected to end at:", lastWord?.end, "seconds");
 
   const audioBytes = Uint8Array.from(atob(audio), c => c.charCodeAt(0));
-  const audioBuffer = await head.audioCtx.decodeAudioData(audioBytes.buffer);
+  const audioBuffer = await activeHead.audioCtx.decodeAudioData(audioBytes.buffer);
   console.log("Actual audio duration:", audioBuffer.duration, "seconds");
 
-  // Prepare data for TalkingHead
   const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
-  const wtimes = timestamps.map(t => t.start * 1000); // ms
-  const wdurations = timestamps.map(t => (t.end - t.start) * 1000); // ms
+  const wtimes = timestamps.map(t => t.start * 1000);
+  const wdurations = timestamps.map(t => (t.end - t.start) * 1000);
 
-  // Pass to TalkingHead speakAudio(data, options)
-  head.speakAudio(
+  activeHead.speakAudio(
     {
       audio: audioBuffer,
       words: words,
       wtimes: wtimes,
       wdurations: wdurations
     }, 
-    { isRaw: true } // Skips internal sentence-dividing logic
+    { isRaw: true }
   );
 
   return new Promise(resolve => {
-    // Wait for the actual audio duration before resolving
+    setTimeout(resolve, audioBuffer.duration * 1000);
+  });
+}
+
+export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor') {
+  const activeHead = character === 'companion' ? head1 : head;
+  const [audioRes, tsRes] = await Promise.all([
+    fetch(audioPath),
+    fetch(timestampsPath)
+  ]);
+
+  const audioBuffer = await activeHead.audioCtx.decodeAudioData(
+    await audioRes.arrayBuffer()
+  );
+  const timestamps = await tsRes.json();
+
+  const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
+  const wtimes = timestamps.map(t => t.start * 1000);
+  const wdurations = timestamps.map(t => (t.end - t.start) * 1000);
+  
+  // define word -> gesture mappings here
+  const wordGestures = [
+    { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
+    { word: 'not', gesture: 'shrug',   dur: 3, transition: 2000 },
+    { word: 'show', gesture: 'talkopen',   dur: 2, transition: 1500 },
+    { word: 'one', gesture: 'indexFingerRaise',   dur: 2, transition: 1500 },
+    { word: 'type', gesture: 'talkopen',   dur: 2, transition: 1500 }
+  ];
+
+  const markers = [];
+  const mtimes = [];
+
+  wordGestures.forEach(({ word, gesture, dur, transition }) => {
+    const idx = timestamps.findIndex(
+      t => t.word.trim().toLowerCase().replace(/[.,!?;:]/g, '') === word
+    );
+    if (idx !== -1) {
+      markers.push(() => activeHead.playGesture(gesture, dur, false, transition));
+      mtimes.push(wtimes[idx]);
+    }
+  });
+  activeHead.stopGesture();
+  activeHead.speakAudio(
+    { audio: audioBuffer, words, wtimes, wdurations, markers, mtimes },
+    { isRaw: true }
+  );
+
+  return new Promise(resolve => {
     setTimeout(resolve, audioBuffer.duration * 1000);
   });
 }
@@ -234,7 +289,8 @@ export const gestures = {
   indexFingerRaise,
   headNod,
   startSwiping,
-  stopSwiping
+  stopSwiping,
+  wave
   // add more here
 };
 

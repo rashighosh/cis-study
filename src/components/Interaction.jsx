@@ -32,13 +32,14 @@ export default function Interaction() {
   const chatRef = useRef(null);
   const tipTimeout = useRef(null);
   const messagesRef = useRef(null);
-  const currentGesture = useRef("ready");
+  const currentGesture = useRef("thumbsup");
+  const [hasSuggestion, setHasSuggestion] = useState(false);
   const [companionDismissed, setCompanionDismissed] = useState(false);
   const [reaction, setReaction] = useState({
-    gesture: "ready",
+    gesture: "thumbsup",
     label: "ready",
     color: GESTURE_COLORS["ready"],
-    tip: null,
+    tip: "Start typing a question below! Remember, if you aren't sure what to ask, you can pause for a moment and I'll help.",
     suggestions: null,
   });
   const companionRef = useRef(null);
@@ -78,18 +79,19 @@ export default function Interaction() {
     }
     if (!input.trim()) {
       setReaction({
-        gesture: "ready",
+        gesture: "thumbsup",
         label: "ready",
         color: GESTURE_COLORS["ready"],
-        tip: null,
+        tip: "Start typing a question below! Remember, if you aren't sure what to ask, you can pause for a moment and I'll help.",
         suggestions: null,
       });
-      currentGesture.current = "ready";
+      currentGesture.current = "thumbsup";
       stopCompanionGesture();
       setShowTip(false);
       return;
     }
     console.log("USER IS TYPING")
+    setCompanionDismissed(false);
     focusCharacter(2)
     if (currentGesture.current !== "lookdown") {
       currentGesture.current = "lookdown";
@@ -108,6 +110,7 @@ export default function Interaction() {
         setReaction(newReactionState); // data is already { label, tip, color, emoji }
         currentGesture.current = data.gesture;
         if (data.gesture !== "thumbsup") {
+          setHasSuggestion(true)
           playGesture("indexFingerRaise")
         } else {
           playGesture(data.gesture);
@@ -145,7 +148,6 @@ export default function Interaction() {
       setIsTyping(false);
       // Do this:
       await speakWithLipsync(data.answer);
-      setCompanionDismissed(false);
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
@@ -208,9 +210,13 @@ export default function Interaction() {
           {/* Companion row — CSS vars carry the dynamic color */}
           <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
             <div className="virtual-companion-wrapper">
-              <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => playGesture(currentGesture.current)} />
+              <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => { playGesture(currentGesture.current); setHasSuggestion(false)}} />
             </div>
-
+            {hasSuggestion && (
+              <div className="companion-thinking-bubble">
+                Hmmm...
+              </div>
+            )}
             <div className="companion-popout" style={{ '--reaction-color': r.color }}>
                 <div className="companion-popout-arrow" />
                 <div className="companion-info">
@@ -227,7 +233,7 @@ export default function Interaction() {
                   </div>
                   {!input && (
                     <div className="companion-placeholder">
-                      I'll review your question as you type...
+                      Start typing a question below! Remember, if you aren't sure what to ask, you can pause for a moment and I'll help.
                     </div>
                   )}
                   {r.suggestions && r.suggestions.length > 0 && (

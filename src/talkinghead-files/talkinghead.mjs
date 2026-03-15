@@ -290,7 +290,25 @@ class TalkingHead {
         'LeftShoulder.rotation':{x:[1.5,2,1,2], y:[0.2,0.4,1,2], z:[-1.5,-1.3,1,2]}, 'LeftArm.rotation':{x:[1.5,1.7,1,1], y:[-0.6,-0.4,1,2], z:[1,1.2,1,2]}, 'LeftForeArm.rotation':{x:-0.415, y:[-0.4,0,1,2], z:1.575}, 'LeftHand.rotation':{x:-0.476, y:-0.506, z:-0.208}, 'LeftHandThumb1.rotation':{x:0.703, y:0.445, z:0.899}, 'LeftHandThumb2.rotation':{x:-0.312, y:-0.04, z:-0.938}, 'LeftHandThumb3.rotation':{x:-0.37, y:0.024, z:-0.393}, 'LeftHandIndex1.rotation':{x:0.8, y:-0.086, z:-0.091}, 'LeftHandIndex2.rotation':{x:1.123, y:-0.046, z:-0.074}, 'LeftHandIndex3.rotation':{x:0.562, y:-0.013, z:-0.043}, 'LeftHandMiddle1.rotation':{x:-0.019, y:-0.128, z:-0.082}, 'LeftHandMiddle2.rotation':{x:0.233, y:0.019, z:-0.074}, 'LeftHandMiddle3.rotation':{x:0, y:0, z:0}, 'LeftHandRing1.rotation':{x:0.005, y:-0.241, z:-0.122}, 'LeftHandRing2.rotation':{x:0.261, y:0.021, z:-0.076}, 'LeftHandRing3.rotation':{x:0, y:0, z:0}, 'LeftHandPinky1.rotation':{x:0.059, y:-0.336, z:-0.2}, 'LeftHandPinky2.rotation':{x:0.153, y:0.019, z:0.001}, 'LeftHandPinky3.rotation':{x:0, y:0, z:0}
       },
       'thumbup': {
-        'LeftShoulder.rotation':{x:[1.5,2,1,2], y:[0.2,0.4,1,2], z:[-1.5,-1.3,1,2]}, 'LeftArm.rotation':{x:[1.5,1.7,1,2], y:[-0.6,-0.4,1,2], z:[1,1.2,1,2]}, 'LeftForeArm.rotation':{x:-0.415, y:0.206, z:1.575}, 'LeftHand.rotation':{x:-0.276, y:-0.506, z:-0.208}, 'LeftHandThumb1.rotation':{x:0.208, y:-0.189, z:0.685}, 'LeftHandThumb2.rotation':{x:0.129, y:-0.285, z:-0.163}, 'LeftHandThumb3.rotation':{x:-0.047, y:0.068, z:0.401}, 'LeftHandIndex1.rotation':{x:1.412, y:-0.102, z:-0.152}, 'LeftHandIndex2.rotation':{x:1.903, y:-0.16, z:-0.114}, 'LeftHandIndex3.rotation':{x:0.535, y:-0.017, z:-0.062}, 'LeftHandMiddle1.rotation':{x:1.424, y:-0.103, z:-0.12}, 'LeftHandMiddle2.rotation':{x:1.919, y:-0.162, z:-0.114}, 'LeftHandMiddle3.rotation':{x:0.44, y:-0.012, z:-0.051}, 'LeftHandRing1.rotation':{x:1.619, y:-0.127, z:-0.053}, 'LeftHandRing2.rotation':{x:1.898, y:-0.16, z:-0.115}, 'LeftHandRing3.rotation':{x:0.262, y:-0.004, z:-0.031}, 'LeftHandPinky1.rotation':{x:1.661, y:-0.131, z:-0.016}, 'LeftHandPinky2.rotation':{x:1.715, y:-0.067, z:-0.13}, 'LeftHandPinky3.rotation':{x:0.627, y:-0.023, z:-0.071}
+        'RightShoulder.rotation':{x:[1.5,2,1,2], y:[-0.2,-0.4,1,2], z:[1.5,1.3,1,2]},
+        'RightArm.rotation':{x:[1.5,1.7,1,2], y:[0.6,0.4,1,2], z:[-1,-1.2,1,2]},
+        'RightForeArm.rotation':{x:-0.415, y:-0.206, z:-1.575},
+        'RightHand.rotation':{x:-0.276, y:0.506, z:0.208},
+        'RightHandThumb1.rotation':{x:0.208, y:0.189, z:-0.685},
+        'RightHandThumb2.rotation':{x:0.129, y:0.285, z:0.163},
+        'RightHandThumb3.rotation':{x:-0.047, y:-0.068, z:-0.401},
+        'RightHandIndex1.rotation':{x:1.412, y:0.102, z:0.152},
+        'RightHandIndex2.rotation':{x:1.903, y:0.16, z:0.114},
+        'RightHandIndex3.rotation':{x:0.535, y:0.017, z:0.062},
+        'RightHandMiddle1.rotation':{x:1.424, y:0.103, z:0.12},
+        'RightHandMiddle2.rotation':{x:1.919, y:0.162, z:0.114},
+        'RightHandMiddle3.rotation':{x:0.44, y:0.012, z:0.051},
+        'RightHandRing1.rotation':{x:1.619, y:0.127, z:0.053},
+        'RightHandRing2.rotation':{x:1.898, y:0.16, z:0.115},
+        'RightHandRing3.rotation':{x:0.262, y:0.004, z:0.031},
+        'RightHandPinky1.rotation':{x:1.661, y:0.131, z:0.016},
+        'RightHandPinky2.rotation':{x:1.715, y:0.067, z:0.13},
+        'RightHandPinky3.rotation':{x:0.627, y:0.023, z:0.071}
       },
       'thumbdown': {
         'LeftShoulder.rotation':{x:[1.5,2,1,2], y:[0.2,0.4,1,2], z:[-1.5,-1.3,1,2]}, 'LeftArm.rotation':{x:[1.5,1.7,1,2], y:[-0.6,-0.4,1,2], z:[1,1.2,1,2]}, 'LeftForeArm.rotation':{x:-2.015, y:0.406, z:1.575}, 'LeftHand.rotation':{x:-0.176, y:-0.206, z:-0.208}, 'LeftHandThumb1.rotation':{x:0.208, y:-0.189, z:0.685}, 'LeftHandThumb2.rotation':{x:0.129, y:-0.285, z:-0.163}, 'LeftHandThumb3.rotation':{x:-0.047, y:0.068, z:0.401}, 'LeftHandIndex1.rotation':{x:1.412, y:-0.102, z:-0.152}, 'LeftHandIndex2.rotation':{x:1.903, y:-0.16, z:-0.114}, 'LeftHandIndex3.rotation':{x:0.535, y:-0.017, z:-0.062}, 'LeftHandMiddle1.rotation':{x:1.424, y:-0.103, z:-0.12}, 'LeftHandMiddle2.rotation':{x:1.919, y:-0.162, z:-0.114}, 'LeftHandMiddle3.rotation':{x:0.44, y:-0.012, z:-0.051}, 'LeftHandRing1.rotation':{x:1.619, y:-0.127, z:-0.053}, 'LeftHandRing2.rotation':{x:1.898, y:-0.16, z:-0.115}, 'LeftHandRing3.rotation':{x:0.262, y:-0.004, z:-0.031}, 'LeftHandPinky1.rotation':{x:1.661, y:-0.131, z:-0.016}, 'LeftHandPinky2.rotation':{x:1.715, y:-0.067, z:-0.13}, 'LeftHandPinky3.rotation':{x:0.627, y:-0.023, z:-0.071}
@@ -423,6 +441,22 @@ class TalkingHead {
         'LeftHandPinky1.rotation': { x: 1.0, y: 0, z: 0 },
         'LeftHandPinky2.rotation': { x: 1.2, y: 0, z: 0 },
         'LeftHandPinky3.rotation': { x: 0.9, y: 0, z: 0 }
+      },
+        'talkinward': {
+        'LeftArm.rotation':     { x: 1.3,  y: 0.2,  z: 0.4  },
+        'LeftForeArm.rotation': { x: 0,    y: 0,     z: 1.4  },
+        'LeftHand.rotation':    { x: -0.3, y: -0.8,  z: 0.2  },
+        'RightArm.rotation':    { x: 1.3,  y: -0.2,  z: -0.4 },
+        'RightForeArm.rotation':{ x: 0,    y: 0,     z: -1.4 },
+        'RightHand.rotation':   { x: -0.3, y: 0.8,   z: -0.2 },
+      },
+      'talkopen': {
+        'LeftArm.rotation':     { x: 1.2,  y: 0,  z: 0.4  },
+        'LeftForeArm.rotation': { x: 0,    y: 0,     z: 1.0  },
+        'LeftHand.rotation':    { x: -0.3, y: -0.8,  z: 0.2  },
+        'RightArm.rotation':    { x: 1.2,  y: 0,  z: -0.4 },
+        'RightForeArm.rotation':{ x: 0,    y: 0,     z: -1.0 },
+        'RightHand.rotation':   { x: -0.3, y: 0.8,   z: -0.2 },
       }
     }
 
@@ -3225,6 +3259,7 @@ class TalkingHead {
   * @param {subtitlesfn} [onsubtitles=null] Callback when a subtitle is written
   */
   speakAudio(r, opt = null, onsubtitles = null ) {
+    console.log("IN SPEAK AUDIO!")
     opt = opt || {};
     const lipsyncLang = opt.lipsyncLang || this.avatar.lipsyncLang || this.opt.lipsyncLang;
     const o = {};
@@ -4721,7 +4756,7 @@ class TalkingHead {
   * @param {number} [ms=1000] Transition time in milliseconds
   */
   playGesture(name, dur=3, mirror=false, ms=1000) {
-    console.log("Inside playGesture in talkinghead ...")
+    console.log("Inside playGesture in talkinghead ...", name)
 
     if ( !this.armature ) return;
 
