@@ -5,6 +5,7 @@ import { TalkingHead } from './talkinghead-files/talkinghead.mjs';
 const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
 let head = null;
 let head1 = null;
+let onSubtitleCallback = null;
 
 document.addEventListener('click', () => {
   console.log("Making sure audio will work ...")
@@ -45,7 +46,7 @@ export async function initDoctorCharacter(containerNode) {
 export async function initCompanionCharacter(containerNode, gesture="thumbsup") {
   head1 = new TalkingHead(containerNode, {
     lipsyncModules: ['en'],
-    cameraView: 'mid', // full, mid, upper, head,
+    cameraView: 'upper', // full, mid, upper, head,
     avatarSpeakingHeadMove: 1,
     cameraRotateEnable: false,
     cameraPanEnable: false,
@@ -166,9 +167,12 @@ export async function stopCompanionGesture() {
   head1.stopGesture(3000);
 }
 
-export async function speakWithLipsync(text, character = 'doctor') {
-  const activeHead = character === 'companion' ? head1 : head;
+export function setSubtitleCallback(fn) {
+  onSubtitleCallback = fn;
+}
 
+export async function speakWithLipsync(text, character = 'doctor', onStart = null) {
+  const activeHead = character === 'companion' ? head1 : head;
   const ttsRes = await fetch(`${BASE_URL}/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -188,7 +192,18 @@ export async function speakWithLipsync(text, character = 'doctor') {
   const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
   const wtimes = timestamps.map(t => t.start * 1000);
   const wdurations = timestamps.map(t => (t.end - t.start) * 1000);
+  const subtitleWords = timestamps.map(t => t.word.trim());
 
+  if (onSubtitleCallback) {
+    const chunkSize = 8;
+    for (let i = 0; i < subtitleWords.length; i += chunkSize) {
+      const chunk = subtitleWords.slice(i, i + chunkSize).join(' ');
+      const triggerTime = wtimes[i];
+      setTimeout(() => onSubtitleCallback(chunk), triggerTime);
+    }
+  }
+  activeHead.stopGesture();
+  // fire onStart right before audio plays
   activeHead.speakAudio(
     {
       audio: audioBuffer,
@@ -196,9 +211,11 @@ export async function speakWithLipsync(text, character = 'doctor') {
       wtimes: wtimes,
       wdurations: wdurations
     }, 
-    { isRaw: true }
+    { isRaw: true },
+    null
   );
 
+  if (onStart) onStart();
   return new Promise(resolve => {
     setTimeout(resolve, audioBuffer.duration * 1000);
   });
@@ -219,6 +236,16 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
   const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
   const wtimes = timestamps.map(t => t.start * 1000);
   const wdurations = timestamps.map(t => (t.end - t.start) * 1000);
+  const subtitleWords = timestamps.map(t => t.word.trim());
+
+  if (onSubtitleCallback) {
+    const chunkSize = 8;
+    for (let i = 0; i < subtitleWords.length; i += chunkSize) {
+      const chunk = subtitleWords.slice(i, i + chunkSize).join(' ');
+      const triggerTime = wtimes[i];
+      setTimeout(() => onSubtitleCallback(chunk), triggerTime);
+    }
+  }
   
   // define word -> gesture mappings here
   const wordGestures = [
@@ -244,7 +271,8 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
   activeHead.stopGesture();
   activeHead.speakAudio(
     { audio: audioBuffer, words, wtimes, wdurations, markers, mtimes },
-    { isRaw: true }
+    { isRaw: true },
+    null
   );
 
   return new Promise(resolve => {

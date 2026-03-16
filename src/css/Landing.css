@@ -147,6 +147,7 @@
   width: 55%;
   min-height: 100px;
   padding: 14px 18px;
+  margin: 15px 0;
   font-size: 18px;
   font-family: "Funnel Sans", sans-serif;
   color: rgb(var(--grey));
@@ -214,6 +215,20 @@
 
 .landing-companion {
   height: 280px;
-  width: 280px;
+  width: 100%;
   margin-bottom: 8px;
+}
+
+.landing-subtitle {
+  min-height: 2.5rem; /* enough for one line, adjust if text wraps */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: rgb(var(--grey) / 70%);
+  font-style: italic;
+  text-align: center;
+  max-width: 55%;
+  margin: 0 auto;
+  transition: opacity 0.3s ease;
 }

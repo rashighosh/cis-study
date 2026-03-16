@@ -3259,7 +3259,7 @@ class TalkingHead {
   * @param {subtitlesfn} [onsubtitles=null] Callback when a subtitle is written
   */
   speakAudio(r, opt = null, onsubtitles = null ) {
-    console.log("IN SPEAK AUDIO!")
+    console.log("IN SPEAK AUDIO!, subtitles", onsubtitles)
     opt = opt || {};
     const lipsyncLang = opt.lipsyncLang || this.avatar.lipsyncLang || this.opt.lipsyncLang;
     const o = {};
@@ -3276,6 +3276,7 @@ class TalkingHead {
 
           // Subtitle
           if ( onsubtitles ) {
+            console.log("IN ON SUBTITLES")
             lipsyncAnim.push( {
               template: { name: 'subtitles' },
               ts: [time],
