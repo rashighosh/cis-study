@@ -19,7 +19,7 @@ const steps = [
     label: "HOW IT WORKS",
     title: "Find the right questions. Get the answers you need.",
     body: "You'll interact with two virtual characters: Jordan and Dr. Alex. <b>Jordan</b> will help you shape the right questions as you type. Then, <b>Dr. Alex</b> will help you find the right answer by searching multiple trusted sources.",
-    cta: "Meet Jordan!",
+    cta: "Let's start!",
   },
   {
     id: 2,
@@ -38,6 +38,13 @@ const steps = [
   },
   {
     id: 4,
+    label: "JORDAN",
+    title: "Your Question Assistant",
+    body: "It's not always easy to know what to ask— or even what's possible to ask. I'm here to bridge that gap. As you type, I'll give you live feedback and suggestions so you never feel lost or stuck. Just pause for a moment and I can help you shape your question into something clear and answerable.",
+    cta: "How does it work?",
+  },
+  {
+    id: 5,
     label: "DR ALEX",
     title: "Your Information Assistant",
     body: "There's a lot of information out there about clinical trials — and it can be hard to know what's reliable or where to look. That's where I come in. Ask me anything about clinical trials and I'll search through trusted sources like the National Cancer Institute to find the clearest, most relevant answer for you.",
