@@ -141,13 +141,14 @@ export default function Interaction() {
     setShowCards(true);    
     try {
       const data = await submitQuestion(userMsg);
-      playGesture('stopSwiping')
-      playGesture('headNod')
-      setShowCards(false);
-      setMessages(m => [...m, { from: "doctor", text: data.answer }]);
-      setIsTyping(false);
       // Do this:
-      await speakWithLipsync(data.answer);
+      await speakWithLipsync(data.answer, 'doctor', () => {
+        playGesture('stopSwiping')
+        playGesture('headNod')
+        setShowCards(false);
+        setMessages(m => [...m, { from: "doctor", text: data.answer }]);
+        setIsTyping(false);
+      });
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
@@ -247,7 +248,6 @@ export default function Interaction() {
                   )}
                 </div>
               </div>
-
           </div>
 
           {/* Input row */}
