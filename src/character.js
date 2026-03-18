@@ -17,10 +17,10 @@ document.addEventListener('click', () => {
   }
 }, { once: true });
 
-export async function initDoctorCharacter(containerNode) {
+export async function initDoctorCharacter(containerNode, view = 'mid') {
   head = new TalkingHead(containerNode, {
     lipsyncModules: ['en'],
-    cameraView: 'mid', // full, mid, upper, head,
+    cameraView: view, // full, mid, upper, head,
     cameraRotateEnable: false,
     cameraPanEnable: false,
     cameraZoomEnable: false,
@@ -38,6 +38,7 @@ export async function initDoctorCharacter(containerNode) {
     ttsVoice: 'en-GB-Standard-A',
     lipsyncLang: 'en',
   });
+  
   focusCharacter(2)
 
   return head;
@@ -53,7 +54,6 @@ export async function initCompanionCharacter(containerNode, gesture="thumbsup") 
     cameraZoomEnable: false,
     cameraDistance: -1,
   });
-  console.log("HEAD 1 IS", head1)
 
   await head1.showAvatar({
     url: '/character-models/male.glb',
