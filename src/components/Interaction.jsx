@@ -3,6 +3,7 @@ import { submitQuestion, precheckQuestion } from '../api/llm.js';
 import { logEvents, logTranscript } from '../api/logging.js';
 import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, stopCompanionGesture, focusCharacter, setSubtitleCallback } from '../character.js';
 import '../css/Interaction.css';
+import logo from '../assets/logo-transparent.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import SwipingCards from "./SwipingCards";
@@ -23,10 +24,12 @@ const GOOD_TIPS = [
 ];
 
 export default function Interaction() {
+  const [participantId, setParticipantId] = useState('');
   const [isReady, setIsReady] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [buttonFlag, setButtonFlag] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(null);
   const [showTip, setShowTip] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
   const [showCards, setShowCards] = useState(false);
@@ -43,6 +46,9 @@ export default function Interaction() {
   const hasStarted = useRef(false);
   const skipNextInputEffect = useRef(false);
   const skipOnSubmit = useRef(false);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [transcript, setTranscript] = useState([]);
+  const [events, setEvents] = useState([]);
   const [reaction, setReaction] = useState({
     gesture: '',
     label: "ready",
@@ -52,6 +58,15 @@ export default function Interaction() {
   });
   const companionRef = useRef(null);
   const doctorRef = useRef(null);
+
+  // for logging
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const idFromURL = params.get('participantId') || 'rashi-test';
+    const conditionFromURL = parseInt(params.get('conditionId')) || 1;
+    setParticipantId(idFromURL)
+    console.log("User ID = " + idFromURL + " and condition = " + conditionFromURL)
+  }, []);
 
   // This effect handles the INITIAL ASSET LOAD
   useEffect(() => {
@@ -94,6 +109,15 @@ export default function Interaction() {
     playIntro();
   }, [isReady, startTalk])
 
+  const updateTranscript = (role, content, meta = {}) => {
+    const newEntry = { role, content, timestamp: new Date().toISOString(), ...meta };
+    setTranscript(prev => {
+      const updated = [...prev, newEntry];
+      logTranscript(participantId, updated);
+      return updated;
+    });
+  };
+
   // Listening when user starts typing
   useEffect(() => {
     if (!isReady || !startTalk) return;
@@ -113,6 +137,8 @@ export default function Interaction() {
       currentGesture.current = "thumbsup";
       setHasSuggestion(false)
       setShowTip(true);
+      updateTranscript("user", selectedSuggestion, { used_suggestion: true });
+      setSelectedSuggestion(null); // reset
       setButtonFlag(false); // reset the flag after handling
       return;
     }
@@ -161,6 +187,7 @@ export default function Interaction() {
         newReactionState["color"] = GESTURE_COLORS[data.gesture]
         console.log("Response/reaction from precheck is:", newReactionState)
         setReaction(newReactionState); // data is already { label, tip, color, emoji }
+        updateTranscript("precheck", "", { precheckItem: data });
         currentGesture.current = data.gesture;
         if (data.gesture !== "thumbsup") {
           setHasSuggestion(true)
@@ -183,13 +210,17 @@ export default function Interaction() {
   const handleSubmit = async () => {
     console.log("in handle submit")
     if (!input.trim()) return;
-    focusCharacter(1)
+    const newCount = questionCount + 1;
+    setQuestionCount(newCount);
+    focusCharacter(1);
     setCompanionDismissed(true);
     console.log("SET COMPANION DISMISSED IS", companionDismissed)
     setJordanSpeaking(true)
     const userMsg = input.trim();
     setMessages(m => [...m, { from: "user", text: userMsg }]);
     skipOnSubmit.current = true;
+    // add user's message to transcript
+    updateTranscript("user", userMsg)
     setInput("");
     playGesture('lookup')
     setShowTip(false);
@@ -204,6 +235,8 @@ export default function Interaction() {
         playGesture('headNod')
         setShowCards(false);
         setMessages(m => [...m, { from: "doctor", text: data.answer }]);
+        // add dr alex's response to transcript
+        updateTranscript("alex", data.answer)
         setIsTyping(false);
       });
     } catch (error) {
@@ -215,24 +248,26 @@ export default function Interaction() {
   };
 
   const r = reaction;
+  console.log("Question count is", questionCount)
 
   return (
     <div className="page-wrapper">
       {!isReady && (
         <div className="loading">
           <div className="instructions">
+            <img src={logo} alt="Study logo" />
             <h2>You are about the begin the <span>main interaction</span></h2>
             <hr/>
-                <div class="steps">
-                  <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-content">
+                <div className="steps">
+                  <div className="step">
+                    <div className="step-num">1</div>
+                    <div className="step-content">
                       To complete the main interaction, you must ask <b>Dr. Alex</b> at least <strong>five (5) questions</strong> during your conversation.
                     </div>
                   </div>
-                  <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
+                  <div className="step">
+                    <div className="step-num">2</div>
+                    <div className="step-content">
                       After your fifth question, a <b>Continue button</b> will appear in the <strong>bottom right corner</strong> of your screen — click it to proceed.
                     </div>
                   </div>
@@ -322,7 +357,7 @@ export default function Interaction() {
                     {r.suggestions && r.suggestions.length > 0 && (
                       <div className="suggestions">
                         {r.suggestions.map((s, i) => (
-                          <button key={i} className="suggestion-btn" onClick={() => {setInput(s); setButtonFlag(true)}}>
+                          <button key={i} className="suggestion-btn" onClick={() => {setInput(s); setButtonFlag(true); setSelectedSuggestion(s);}}>
                             {s}
                           </button>
                         ))}
@@ -371,6 +406,7 @@ export default function Interaction() {
             </div>
           </div>
         </div>
+        {questionCount >=5 && <button className="continue-btn">Continue  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
       </div>
     </div>
 

@@ -64,12 +64,10 @@ export default function Landing() {
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [userInput, setUserInput] = useState("");
-  // const [llmResponse, setLlmResponse] = useState("");
   const isTypingRef = useRef(false);
   const [llmLoading, setLlmLoading] = useState(false);
   const [llmDone, setLlmDone] = useState(false);
   const [jordanSpeaking, setJordanSpeaking] = useState(true);
-  const [doctorSpeaking, setDoctorSpeaking] = useState(true);
   const [subtitle, setSubtitle] = useState('');
   const companionRef = useRef(null);
   const doctorRef = useRef(null);
