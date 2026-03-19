@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { initCompanionCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, setSubtitleCallback, initDoctorCharacter } from '../character.js';
 import { landingExample, precheckQuestion } from '../api/llm.js';
-import { logEvent, logMessage, logSession } from '../api/logging.js';
+import { logSession, logLanding } from '../api/logging.js';
 
 const steps = [
   {
@@ -60,6 +60,7 @@ const steps = [
 ];
 
 export default function Landing() {
+  const [participantId, setParticipantId] = useState('');
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -86,13 +87,14 @@ export default function Landing() {
   // for logging
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const participantId = params.get('participantId') || 'rashi-test';
-    const conditionId = parseInt(params.get('conditionId')) || 1;
+    const idFromURL = params.get('participantId') || 'rashi-test';
+    const conditionFromURL = parseInt(params.get('conditionId')) || 1;
+    setParticipantId(idFromURL)
     
-    if (participantId && conditionId) {
-      logSession(participantId, conditionId);
+    if (idFromURL && conditionFromURL) {
+      logSession(idFromURL, conditionFromURL);
     }
-    console.log("Logged Session for participant_id = " + participantId + " and condition = " + conditionId)
+    console.log("Logged Session for participant_id = " + idFromURL + " and condition = " + conditionFromURL)
   }, []);
 
   // init on slide 2
@@ -170,6 +172,8 @@ export default function Landing() {
     if (!userInput.trim() || llmLoading) return;
     setLlmLoading(true);
     setLlmDone(false);
+    logLanding(participantId, userInput)
+    console.log("Logged landing question in database.")
     try {
       const data = await landingExample(userInput);
       console.log("DATA FROM PRECHECK IS", data.reply)

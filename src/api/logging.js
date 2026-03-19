@@ -1,6 +1,6 @@
 // const BASE_URL = 'https://fastapi-rashi.onrender.com';
-// const BASE_URL = 'http://127.0.0.1:8000';
-const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
+const BASE_URL = 'http://127.0.0.1:8000';
+// const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
 
 export async function logSession(participantId, condition) {
   await fetch(`${BASE_URL}/log-session`, {
@@ -14,28 +14,46 @@ export async function logSession(participantId, condition) {
   });
 }
 
-export async function logEvent(participantId, eventType, eventData = {}) {
-  await fetch(`${BASE_URL}/log-event`, {
+export async function logLanding(participantId, landingQuestion) {
+  await fetch(`${BASE_URL}/log-landing`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       participant_id: participantId,
-      event_type: eventType,
-      event_data: JSON.stringify(eventData),
-      timestamp: new Date().toISOString()
+      landing_question: landingQuestion
     })
   });
 }
 
-export async function logMessage(participantId, role, message) {
-  await fetch(`${BASE_URL}/log-message`, {
+export async function logEvents(participantId, events) {
+  await fetch(`${BASE_URL}/log-events`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       participant_id: participantId,
-      role,
-      message,
-      timestamp: new Date().toISOString()
+      events: JSON.stringify(events)
+    })
+  });
+}
+
+export async function logTranscript(participantId, transcript) {
+  await fetch(`${BASE_URL}/log-transcript`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      participant_id: participantId,
+      transcript: JSON.stringify(transcript)
+    })
+  });
+}
+
+export async function logCompletion(participantId) {
+  await fetch(`${BASE_URL}/log-completion`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      participant_id: participantId,
+      end_time: new Date().toISOString()
     })
   });
 }
