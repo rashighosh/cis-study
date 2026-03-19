@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { initCompanionCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, setSubtitleCallback, initDoctorCharacter } from '../character.js';
 import { landingExample, precheckQuestion } from '../api/llm.js';
+import { logEvent, logMessage, logSession } from '../api/logging.js';
 
 const steps = [
   {
@@ -81,6 +82,18 @@ export default function Landing() {
   const isLast = current === steps.length - 1;
   const step = steps[current];
   const ctaDisabled = step.type === "llm" && !llmDone && !userInput.trim();
+
+  // for logging
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const participantId = params.get('participantId') || 'rashi-test';
+    const conditionId = parseInt(params.get('conditionId')) || 1;
+    
+    if (participantId && conditionId) {
+      logSession(participantId, conditionId);
+    }
+    console.log("Logged Session for participant_id = " + participantId + " and condition = " + conditionId)
+  }, []);
 
   // init on slide 2
   useEffect(() => {

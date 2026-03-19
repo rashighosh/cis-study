@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from '../api/llm.js';
+import { logEvent, logMessage, logSession } from '../api/logging.js';
 import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, stopCompanionGesture, focusCharacter, setSubtitleCallback } from '../character.js';
 import '../css/Interaction.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
