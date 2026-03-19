@@ -8,7 +8,6 @@ let head1 = null;
 let onSubtitleCallback = null;
 
 document.addEventListener('click', () => {
-  console.log("Making sure audio will work ...")
   if (head?.audioCtx?.state === 'suspended') {
     head.audioCtx.resume();
   }
@@ -138,7 +137,6 @@ export async function startSwiping() {
 
 export function stopSwiping() {
   isSwiping = false;
-  console.log("Swipe loop stopping...");
 }
 
 export async function lookup() {
@@ -158,7 +156,6 @@ export async function indexFingerRaise() {
 
 
 export async function headNod() {
-  console.log("in head nod!")
   head.playGesture('yes', 5, false, 1500);
   // head.playAnimation('/animations/Looking Around.fbx')
 }
@@ -181,13 +178,10 @@ export async function speakWithLipsync(text, character = 'doctor', onStart = nul
   
   const { audio, timestamps } = await ttsRes.json();
   
-  console.log("Total words received:", timestamps.length);
   const lastWord = timestamps[timestamps.length - 1];
-  console.log("Lipsync expected to end at:", lastWord?.end, "seconds");
 
   const audioBytes = Uint8Array.from(atob(audio), c => c.charCodeAt(0));
   const audioBuffer = await activeHead.audioCtx.decodeAudioData(audioBytes.buffer);
-  console.log("Actual audio duration:", audioBuffer.duration, "seconds");
 
   const words = timestamps.map(t => t.word.trim().replace(/[.,!?;:]/g, ''));
   const wtimes = timestamps.map(t => t.start * 1000);
@@ -281,7 +275,6 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
 }
 
 export async function focusCharacter(character) {
-  console.log("WE ARE IN FOCUS CHARACTER", character)
   if (character === 1) {
       head.setLighting({
         lightDirectIntensity: 45,   // Dim directional light,
@@ -323,6 +316,5 @@ export const gestures = {
 };
 
 export function playGesture(name) {
-  console.log("Gesture triggered:", name)
   gestures[name]?.();
 }

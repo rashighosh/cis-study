@@ -91,8 +91,22 @@
   gap: 5px;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.landing-buttons.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 200px;
+}
+
+.landing-buttons.hidden {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  max-height: 0;
+}
 
 .landing-back {
   color: rgb(var(--grey) / 65%);
@@ -137,6 +151,21 @@
   align-items: center;
   gap: 16px;
   width: 100%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.landing-llm.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 200px;
+}
+
+.landing-llm.hidden {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  max-height: 0;
 }
 
 .landing-prompt {
@@ -164,7 +193,7 @@
   border-color: rgb(var(--grey) / 70%);
 }
 
-.input-textarea::placeholder {
+.landing-textarea::placeholder {
   color: rgb(var(--grey) / 55%);
   font-style: italic;
 }
@@ -217,7 +246,6 @@
 .landing-companion, .landing-doctor {
   height: 280px;
   width: 100%;
-  margin-bottom: 8px;
 }
 
 .landing-subtitle {
@@ -230,6 +258,8 @@
   font-style: italic;
   text-align: center;
   max-width: 55%;
+  min-width: 25%;
   margin: 0 auto;
   transition: opacity 0.3s ease;
+  border-top: 1px solid black;
 }

@@ -1,0 +1,422 @@
+[
+  {
+    "word": " Hi,",
+    "start": 0,
+    "end": 0.26
+  },
+  {
+    "word": " I'm",
+    "start": 0.26,
+    "end": 0.5
+  },
+  {
+    "word": " Jordan!",
+    "start": 0.5,
+    "end": 0.8
+  },
+  {
+    "word": " Clinical",
+    "start": 1.416,
+    "end": 1.656
+  },
+  {
+    "word": " trials",
+    "start": 1.656,
+    "end": 2.056
+  },
+  {
+    "word": " can",
+    "start": 2.056,
+    "end": 2.336
+  },
+  {
+    "word": " be",
+    "start": 2.336,
+    "end": 2.436
+  },
+  {
+    "word": " a",
+    "start": 2.436,
+    "end": 2.556
+  },
+  {
+    "word": " lot",
+    "start": 2.556,
+    "end": 2.776
+  },
+  {
+    "word": " to",
+    "start": 2.776,
+    "end": 2.936
+  },
+  {
+    "word": " take",
+    "start": 2.936,
+    "end": 3.1559999999999997
+  },
+  {
+    "word": " in",
+    "start": 3.1559999999999997,
+    "end": 3.376
+  },
+  {
+    "word": " —",
+    "start": 3.376,
+    "end": 3.496
+  },
+  {
+    "word": " and",
+    "start": 3.496,
+    "end": 3.776
+  },
+  {
+    "word": " it's",
+    "start": 3.776,
+    "end": 3.916
+  },
+  {
+    "word": " not",
+    "start": 3.916,
+    "end": 4.096
+  },
+  {
+    "word": " always",
+    "start": 4.096,
+    "end": 4.416
+  },
+  {
+    "word": " obvious",
+    "start": 4.416,
+    "end": 4.856
+  },
+  {
+    "word": " what",
+    "start": 4.856,
+    "end": 5.136
+  },
+  {
+    "word": " to",
+    "start": 5.136,
+    "end": 5.256
+  },
+  {
+    "word": " ask.",
+    "start": 5.256,
+    "end": 5.536
+  },
+  {
+    "word": " That's",
+    "start": 6,
+    "end": 6.3
+  },
+  {
+    "word": " where",
+    "start": 6.3,
+    "end": 6.4
+  },
+  {
+    "word": " I",
+    "start": 6.4,
+    "end": 6.54
+  },
+  {
+    "word": " come",
+    "start": 6.54,
+    "end": 6.76
+  },
+  {
+    "word": " in.",
+    "start": 6.76,
+    "end": 7
+  },
+  {
+    "word": " I'll",
+    "start": 7.536,
+    "end": 7.736
+  },
+  {
+    "word": " offer",
+    "start": 7.736,
+    "end": 7.9159999999999995
+  },
+  {
+    "word": " tips",
+    "start": 7.9159999999999995,
+    "end": 8.176
+  },
+  {
+    "word": " and",
+    "start": 8.176,
+    "end": 8.416
+  },
+  {
+    "word": " suggestions",
+    "start": 8.416,
+    "end": 8.776
+  },
+  {
+    "word": " to",
+    "start": 8.776,
+    "end": 9.276
+  },
+  {
+    "word": " help",
+    "start": 9.276,
+    "end": 9.475999999999999
+  },
+  {
+    "word": " you",
+    "start": 9.475999999999999,
+    "end": 9.655999999999999
+  },
+  {
+    "word": " shape",
+    "start": 9.655999999999999,
+    "end": 9.856
+  },
+  {
+    "word": " your",
+    "start": 9.856,
+    "end": 10.036
+  },
+  {
+    "word": " questions.",
+    "start": 10.036,
+    "end": 10.356
+  },
+  {
+    "word": " So",
+    "start": 10.968,
+    "end": 11.128
+  },
+  {
+    "word": " you",
+    "start": 11.128,
+    "end": 11.208
+  },
+  {
+    "word": " know",
+    "start": 11.208,
+    "end": 11.368
+  },
+  {
+    "word": " what",
+    "start": 11.368,
+    "end": 11.528
+  },
+  {
+    "word": " to",
+    "start": 11.528,
+    "end": 11.648
+  },
+  {
+    "word": " expect,",
+    "start": 11.648,
+    "end": 11.968
+  },
+  {
+    "word": " let",
+    "start": 12.168,
+    "end": 12.368
+  },
+  {
+    "word": " me",
+    "start": 12.368,
+    "end": 12.508
+  },
+  {
+    "word": " show",
+    "start": 12.508,
+    "end": 12.728
+  },
+  {
+    "word": " you",
+    "start": 12.728,
+    "end": 12.948
+  },
+  {
+    "word": " what",
+    "start": 12.948,
+    "end": 13.088000000000001
+  },
+  {
+    "word": " I",
+    "start": 13.088000000000001,
+    "end": 13.188
+  },
+  {
+    "word": " mean.",
+    "start": 13.188,
+    "end": 13.388
+  },
+  {
+    "word": " In",
+    "start": 13.872,
+    "end": 14.012
+  },
+  {
+    "word": " a",
+    "start": 14.012,
+    "end": 14.072
+  },
+  {
+    "word": " moment,",
+    "start": 14.072,
+    "end": 14.272
+  },
+  {
+    "word": " you'll",
+    "start": 14.352,
+    "end": 14.552
+  },
+  {
+    "word": " see",
+    "start": 14.552,
+    "end": 14.732
+  },
+  {
+    "word": " a",
+    "start": 14.732,
+    "end": 14.872
+  },
+  {
+    "word": " text",
+    "start": 14.872,
+    "end": 15.092
+  },
+  {
+    "word": " box",
+    "start": 15.092,
+    "end": 15.392
+  },
+  {
+    "word": " below.",
+    "start": 15.392,
+    "end": 15.772
+  },
+  {
+    "word": " I'd",
+    "start": 16.368,
+    "end": 16.508
+  },
+  {
+    "word": " like",
+    "start": 16.508,
+    "end": 16.648
+  },
+  {
+    "word": " you",
+    "start": 16.648,
+    "end": 16.808
+  },
+  {
+    "word": " to",
+    "start": 16.808,
+    "end": 16.907999999999998
+  },
+  {
+    "word": " share,",
+    "start": 16.907999999999998,
+    "end": 17.168
+  },
+  {
+    "word": " what's",
+    "start": 17.308,
+    "end": 17.668
+  },
+  {
+    "word": " one",
+    "start": 17.668,
+    "end": 17.828
+  },
+  {
+    "word": " thing",
+    "start": 17.828,
+    "end": 18.107999999999997
+  },
+  {
+    "word": " you've",
+    "start": 18.107999999999997,
+    "end": 18.348
+  },
+  {
+    "word": " wondered",
+    "start": 18.348,
+    "end": 18.587999999999997
+  },
+  {
+    "word": " about",
+    "start": 18.587999999999997,
+    "end": 18.828
+  },
+  {
+    "word": " clinical",
+    "start": 18.828,
+    "end": 19.188
+  },
+  {
+    "word": " trials?",
+    "start": 19.188,
+    "end": 19.688
+  },
+  {
+    "word": " Type",
+    "start": 20.232,
+    "end": 20.492
+  },
+  {
+    "word": " whatever",
+    "start": 20.492,
+    "end": 20.692
+  },
+  {
+    "word": " comes",
+    "start": 20.692,
+    "end": 21.032
+  },
+  {
+    "word": " to",
+    "start": 21.032,
+    "end": 21.272
+  },
+  {
+    "word": " mind",
+    "start": 21.272,
+    "end": 21.592
+  },
+  {
+    "word": " —",
+    "start": 21.592,
+    "end": 21.732
+  },
+  {
+    "word": " it",
+    "start": 21.732,
+    "end": 21.912
+  },
+  {
+    "word": " doesn't",
+    "start": 21.912,
+    "end": 22.252
+  },
+  {
+    "word": " have",
+    "start": 22.252,
+    "end": 22.352
+  },
+  {
+    "word": " to",
+    "start": 22.352,
+    "end": 22.532
+  },
+  {
+    "word": " be",
+    "start": 22.532,
+    "end": 22.631999999999998
+  },
+  {
+    "word": " perfect.",
+    "start": 22.631999999999998,
+    "end": 22.972
+  }
+]

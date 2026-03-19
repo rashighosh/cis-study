@@ -5,6 +5,7 @@ import '../css/Interaction.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import SwipingCards from "./SwipingCards";
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 const GESTURE_COLORS = {
   ready:    "#868686",
@@ -39,6 +40,8 @@ export default function Interaction() {
   const [startTalk, setStartTalk] = useState('');
   const [jordanIntro, setJordanIntro] = useState(true);
   const hasStarted = useRef(false);
+  const skipNextInputEffect = useRef(false);
+  const skipOnSubmit = useRef(false);
   const [reaction, setReaction] = useState({
     gesture: '',
     label: "ready",
@@ -72,8 +75,8 @@ export default function Interaction() {
     if (!isReady || !companionRef.current || !startTalk) return;
     const playIntro = async () => {
       try {
-        const audioFile = '/intro-voices/companion-intro3.mp3';
-        const timestampFile = '/intro-voices/companion-intro-timestamps3.json';
+        const audioFile = '/intro-voices/companion-intro2.mp3';
+        const timestampFile = '/intro-voices/companion-intro-timestamps2.json';
         
         setJordanSpeaking(true);
         setSubtitle('');
@@ -93,7 +96,9 @@ export default function Interaction() {
   // Listening when user starts typing
   useEffect(() => {
     if (!isReady || !startTalk) return;
+    clearTimeout(tipTimeout.current);
     if (buttonFlag) {
+      skipNextInputEffect.current = true;
       // manually set whatever reaction state you want for button-populated input
       var newReaction = {
         gesture: "thumbsup",
@@ -105,13 +110,21 @@ export default function Interaction() {
       setReaction(newReaction);
       playGesture("thumbsup");
       currentGesture.current = "thumbsup";
-
+      setHasSuggestion(false)
       setShowTip(true);
       setButtonFlag(false); // reset the flag after handling
       return;
     }
-    console.log("HAS STARTED IS", hasStarted)
-    if (!input.trim() && !hasStarted.current) {
+    if (skipNextInputEffect.current) {
+      skipNextInputEffect.current = false;
+      return;
+    }
+    if (skipOnSubmit.current) {
+      skipOnSubmit.current = false;
+      return;
+    }
+    if (!input.trim()) {
+      console.log("we are in the empty reaction thingy")
       setReaction({
         gesture: "thumbsup",
         label: "ready",
@@ -121,7 +134,7 @@ export default function Interaction() {
       });
       currentGesture.current = "thumbsup";
       stopCompanionGesture();
-      setShowTip(false);
+      setShowTip(true);
       return;
     }
     setCompanionDismissed(false);
@@ -145,12 +158,14 @@ export default function Interaction() {
         const data = await precheckQuestion(input);
         var newReactionState = data
         newReactionState["color"] = GESTURE_COLORS[data.gesture]
+        console.log("Response/reaction from precheck is:", newReactionState)
         setReaction(newReactionState); // data is already { label, tip, color, emoji }
         currentGesture.current = data.gesture;
         if (data.gesture !== "thumbsup") {
           setHasSuggestion(true)
           playGesture("indexFingerRaise")
         } else {
+          setHasSuggestion(false)
           playGesture(data.gesture);
         }
         setShowTip(true);
@@ -165,12 +180,15 @@ export default function Interaction() {
   }, [messages, isTyping]);
 
   const handleSubmit = async () => {
+    console.log("in handle submit")
     if (!input.trim()) return;
     focusCharacter(1)
     setCompanionDismissed(true);
+    console.log("SET COMPANION DISMISSED IS", companionDismissed)
     setJordanSpeaking(true)
     const userMsg = input.trim();
     setMessages(m => [...m, { from: "user", text: userMsg }]);
+    skipOnSubmit.current = true;
     setInput("");
     playGesture('lookup')
     setShowTip(false);
@@ -202,13 +220,24 @@ export default function Interaction() {
       {!isReady && (
         <div className="loading">
           <div className="instructions">
-            <div>You are about the begin the main interaction!</div>
-            <ol>
-              <li>Please note that in order to complete the main interaction, <b>you must ask Dr. Alex at least five (5) questions.</b></li>
-              <li>After having asked 5 questions, <b>a button will appear in the bottom right corner</b> for you to continue.</li>
-            </ol>
+            <h2>You are about the begin the <span>main interaction</span></h2>
+            <hr/>
+                <div class="steps">
+                  <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                      To complete the main interaction, you must ask <b>Dr. Alex</b> at least <strong>five (5) questions</strong> during your conversation.
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                      After your fifth question, a <b>Continue button</b> will appear in the <strong>bottom right corner</strong> of your screen — click it to proceed.
+                    </div>
+                  </div>
+                </div>
+            <button onClick={() => setIsReady(true)}>Click to begin <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>
           </div>
-          <button onClick={() => setIsReady(true)}>Click to begin</button>
         </div>
       )}
       <div className="page">
@@ -261,14 +290,14 @@ export default function Interaction() {
             {/* Companion row — CSS vars carry the dynamic color */}
             <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
               <div className="virtual-companion-wrapper">
-                {isReady && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => { playGesture(currentGesture.current); setHasSuggestion(false)}} />}
+                {isReady && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => { playGesture(currentGesture.current)}} />}
               </div>
               {hasSuggestion && (
                 <div className="companion-thinking-bubble">
                   Hmmm...
                 </div>
               )}
-              <p className="companion-subtitle">{subtitle}</p>
+              {jordanIntro && <p className="companion-subtitle">{subtitle}</p>}
               {!jordanSpeaking && (
                   <div className="companion-popout" style={{ '--reaction-color': r.color }}>
                   <div className="companion-popout-arrow" />

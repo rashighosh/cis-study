@@ -4757,8 +4757,6 @@ class TalkingHead {
   * @param {number} [ms=1000] Transition time in milliseconds
   */
   playGesture(name, dur=3, mirror=false, ms=1000) {
-    console.log("Inside playGesture in talkinghead ...", name)
-
     if ( !this.armature ) return;
 
     // Hand gesture, if any

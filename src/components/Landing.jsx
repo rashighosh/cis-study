@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from '../assets/logo-transparent.png'
 import "../css/Landing.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { initCompanionCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, setSubtitleCallback, initDoctorCharacter } from '../character.js';
 import { landingExample, precheckQuestion } from '../api/llm.js';
 
@@ -37,18 +37,10 @@ const steps = [
     title: "Get ready to meet Jordan and Dr. Alex",
     body: "For the rest of this introduction, you will briefly meet Jordan and Dr. Alex one by one to get to know their roles. Then, you will be redirected to the actual interaction!",
     cta: "Meet Jordan!",
-    character: true,
+    character: false,
   },
   {
     id: 4,
-    label: "JORDAN",
-    title: "Your Question Assistant",
-    body: "It's not always easy to know what to ask— or even what's possible to ask. I'm here to bridge that gap. As you type, I'll give you live feedback and suggestions so you never feel lost or stuck. Just pause for a moment and I can help you shape your question into something clear and answerable.",
-    cta: "How does it work?",
-    character: true,
-  },
-  {
-    id: 5,
     label: "JORDAN",
     type: "llm",
     title: "Your Question Assistant",
@@ -57,7 +49,7 @@ const steps = [
     character: true,
   },
   {
-    id: 6,
+    id: 5,
     label: "DR ALEX",
     title: "Your Information Assistant",
     body: "Hi, I'm Doctor Alex! There's a lot of information out there about clinical trials — and it can be hard to know what's reliable or where to look. That's where I come in. When you ask me a question about clinical trials, I'll search through trusted sources like the National Cancer Institute to find the clearest, most relevant answer for you.",
@@ -74,8 +66,8 @@ export default function Landing() {
   const isTypingRef = useRef(false);
   const [llmLoading, setLlmLoading] = useState(false);
   const [llmDone, setLlmDone] = useState(false);
-  const [jordanSpeaking, setJordanSpeaking] = useState(false);
-  const [doctorSpeaking, setDoctorSpeaking] = useState(false);
+  const [jordanSpeaking, setJordanSpeaking] = useState(true);
+  const [doctorSpeaking, setDoctorSpeaking] = useState(true);
   const [subtitle, setSubtitle] = useState('');
   const companionRef = useRef(null);
   const doctorRef = useRef(null);
@@ -83,8 +75,8 @@ export default function Landing() {
   const doctorHeadRef = useRef(null);
   const companionInitializedRef = useRef(false);
   const doctorInitializedRef = useRef(false);
-  const showCompanion = current === 4 || current === 5;
-  const showDoctor = current === 6;
+  const showCompanion = current === 4;
+  const showDoctor = current === 5;
 
   const isLast = current === steps.length - 1;
   const step = steps[current];
@@ -100,12 +92,8 @@ export default function Landing() {
         companionHeadRef.current = await initCompanionCharacter(companionRef.current);
         setSubtitleCallback((chunk) => setSubtitle(chunk));
       }
-      const audioFile = current === 4
-        ? '/intro-voices/jordan-intro1.mp3'
-        : '/intro-voices/jordan-intro2.mp3';
-      const timestampFile = current === 4
-        ? '/intro-voices/jordan-intro-timestamps1.json'
-        : '/intro-voices/jordan-intro-timestamps2.json';
+      const audioFile = '/intro-voices/companion-intro1.mp3'
+      const timestampFile = '/intro-voices/companion-intro-timestamps1.json';
 
       try {
         setJordanSpeaking(true);
@@ -128,7 +116,7 @@ export default function Landing() {
       doctorHeadRef.current = await initDoctorCharacter(doctorRef.current, 'upper');
       setSubtitleCallback((chunk) => setSubtitle(chunk));
       try {
-        setDoctorSpeaking(true);
+        setJordanSpeaking(true);
         setSubtitle('');
         await speakWithLipsyncStatic(
           '/intro-voices/doctor-intro1.mp3',
@@ -136,7 +124,7 @@ export default function Landing() {
           'doctor'
         );
       } finally {
-        setDoctorSpeaking(false);
+        setJordanSpeaking(false);
         setSubtitle('');
       }
     })();
@@ -144,6 +132,7 @@ export default function Landing() {
 
   const transition = (dir) => {
     if (animating) return;
+    setJordanSpeaking(true)
     setAnimating(true);
     setTimeout(() => {
       setCurrent((c) => c + dir);
@@ -242,17 +231,15 @@ export default function Landing() {
         )}
 
         {step.type === "llm" ? (
-          <div className="landing-llm">
-            {!jordanSpeaking && !llmDone && (
-              <textarea
-                className="landing-textarea"
-                placeholder="What question comes to mind when you think of clinical trials?"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                rows={3}
-                disabled={llmLoading}
-              />
-            )}
+          <div className={`landing-llm ${!jordanSpeaking && !llmDone ? 'visible' : 'hidden'}`}>
+            <textarea
+              className="landing-textarea"
+              placeholder="What question comes to mind when you think of clinical trials?"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              rows={3}
+              disabled={llmLoading}
+            />
           </div>
         ) : (
           step.id !== 4 && step.id !== 5 && step.id !== 6 && (
@@ -262,23 +249,30 @@ export default function Landing() {
           />
           ) 
         )}
-
-      {!jordanSpeaking && !doctorSpeaking && (
-      <div className="landing-buttons">
-        <button
-          className="landing-button"
-          onClick={handleCta}
-          disabled={ctaDisabled || llmLoading}
-        >
-          {ctaLabel()}
-        </button>
-        {/* {current > 0 && (
-          <p className="landing-back" onClick={() => transition(-1)}>
-            <FontAwesomeIcon size="xs" icon={faArrowLeft} /> Back
-          </p>
-        )} */}
-        </div>
+        {step.character ? (
+          <div>
+            <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
+              <button
+                className="landing-button"
+                onClick={handleCta}
+                disabled={ctaDisabled || llmLoading}
+              >
+                {ctaLabel()}
+              </button>
+            </div>
+          </div>
+        ) : (
+            <div className="landing-buttons">
+              <button
+                className="landing-button"
+                onClick={handleCta}
+                disabled={ctaDisabled || llmLoading}
+              >
+                {ctaLabel()}
+              </button>
+            </div> 
         )}
+        
       </div>
       
 
