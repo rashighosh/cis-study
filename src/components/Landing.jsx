@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { initCompanionCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, setSubtitleCallback, initDoctorCharacter } from '../character.js';
 import { landingExample, precheckQuestion } from '../api/llm.js';
-import { logSession, logLanding } from '../api/logging.js';
+import { logSession, logLandingQuestion, logLandingPrecheck } from '../api/logging.js';
 
 const steps = [
   {
@@ -85,8 +85,8 @@ export default function Landing() {
   // for logging
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const idFromURL = params.get('participantId') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('conditionId')) || 1;
+    const idFromURL = params.get('id') || 'rashi-test';
+    const conditionFromURL = parseInt(params.get('condition')) || 1;
     setParticipantId(idFromURL)
     
     if (idFromURL && conditionFromURL) {
@@ -170,11 +170,12 @@ export default function Landing() {
     if (!userInput.trim() || llmLoading) return;
     setLlmLoading(true);
     setLlmDone(false);
-    logLanding(participantId, userInput)
+    logLandingQuestion(participantId, userInput)
     console.log("Logged landing question in database.")
     try {
       const data = await landingExample(userInput);
       console.log("DATA FROM PRECHECK IS", data.reply)
+      logLandingPrecheck(participantId, data.reply)
       const text = data.reply.response;
       sessionStorage.setItem("suggestions", JSON.stringify(data.reply.suggestions))
       console.log("STORED SUGGESTIONS IN SESSION STORAGE", sessionStorage.getItem("suggestions"))

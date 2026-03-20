@@ -14,8 +14,8 @@ export async function logSession(participantId, condition) {
   });
 }
 
-export async function logLanding(participantId, landingQuestion) {
-  await fetch(`${BASE_URL}/log-landing`, {
+export async function logLandingQuestion(participantId, landingQuestion) {
+  await fetch(`${BASE_URL}/log-landing-question`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -25,19 +25,20 @@ export async function logLanding(participantId, landingQuestion) {
   });
 }
 
-export async function logEvents(participantId, events) {
-  await fetch(`${BASE_URL}/log-events`, {
+export async function logLandingPrecheck(participantId, landing_precheck) {
+  await fetch(`${BASE_URL}/log-landing-precheck`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       participant_id: participantId,
-      events: JSON.stringify(events)
+      landing_precheck: JSON.stringify(landing_precheck)
     })
   });
 }
 
-export async function logTranscript(participantId, transcript) {
-  await fetch(`${BASE_URL}/log-transcript`, {
+export async function logMainInteraction(participantId, transcript) {
+  console.log("about to log main interaction with", participantId, transcript)
+  await fetch(`${BASE_URL}/log-main-interaction`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

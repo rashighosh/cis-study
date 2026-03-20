@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from '../api/llm.js';
-import { logEvents, logTranscript } from '../api/logging.js';
+import { logMainInteraction } from '../api/logging.js';
 import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, stopCompanionGesture, focusCharacter, setSubtitleCallback } from '../character.js';
 import '../css/Interaction.css';
 import logo from '../assets/logo-transparent.png'
@@ -62,8 +62,8 @@ export default function Interaction() {
   // for logging
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const idFromURL = params.get('participantId') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('conditionId')) || 1;
+    const idFromURL = params.get('id') || 'rashi-test';
+    const conditionFromURL = parseInt(params.get('condition')) || 1;
     setParticipantId(idFromURL)
     console.log("User ID = " + idFromURL + " and condition = " + conditionFromURL)
   }, []);
@@ -113,7 +113,8 @@ export default function Interaction() {
     const newEntry = { role, content, timestamp: new Date().toISOString(), ...meta };
     setTranscript(prev => {
       const updated = [...prev, newEntry];
-      logTranscript(participantId, updated);
+      console.log("about to log main interaction")
+      logMainInteraction(participantId, updated);
       return updated;
     });
   };
