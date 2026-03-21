@@ -249,14 +249,15 @@ export default function Interaction() {
         updateTranscript("alex", data.answer)
         setIsTyping(false);
       });
-      if (questionCount >= 5) {
-        setShowContinueButton(true)
-      }
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
     } finally {
       setJordanSpeaking(false)
+      console.log("Question count is", questionCount)
+      if (questionCount >= 5) {
+        setShowContinueButton(true)
+      }
     }
   };
 
@@ -266,7 +267,6 @@ export default function Interaction() {
   };
 
   const r = reaction;
-  console.log("Question count is", questionCount)
 
   return (
     <div className="page-wrapper">
