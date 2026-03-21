@@ -517,11 +517,12 @@
   padding: 14px 16px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 1s ease, transform 0.5s ease;
+  transition: opacity 5s ease, transform 3s ease;
   z-index: 10;
   max-height: 250px;
   display: flex;
   flex-direction: column;
+  color: var(--reaction-color);
 }
 
 .companion-popout-arrow {
@@ -535,12 +536,12 @@
   filter: drop-shadow(-2px 0px 1px rgba(0,0,0,0.07));
 }
 
-.virtual-companion-wrapper:hover ~ .companion-popout,
+.popout-active, .virtual-companion-wrapper:hover ~ .companion-popout,
 .companion-popout:hover {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(-50%) scale(1);
-  transition: opacity 0.15s ease, transform 0.2s ease;
+  transition: opacity .5s ease, transform .5s ease;
 }
 
 /* ─── Input Row ──────────────────────────────────────── */

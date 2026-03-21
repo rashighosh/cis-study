@@ -62,7 +62,7 @@ const steps = [
 export default function Landing() {
   const [participantId, setParticipantId] = useState('');
   const [condition, setCondition] = useState(1);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(3);
   const [animating, setAnimating] = useState(false);
   const [userInput, setUserInput] = useState("");
   const isTypingRef = useRef(false);

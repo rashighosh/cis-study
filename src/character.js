@@ -43,7 +43,7 @@ export async function initDoctorCharacter(containerNode, view = 'mid') {
   return head;
 }
 
-export async function initCompanionCharacter(containerNode, gesture="thumbsup") {
+export async function initCompanionCharacter(containerNode) {
   head1 = new TalkingHead(containerNode, {
     lipsyncModules: ['en'],
     cameraView: 'upper', // full, mid, upper, head,
@@ -62,8 +62,6 @@ export async function initCompanionCharacter(containerNode, gesture="thumbsup") 
     ttsVoice: 'en-GB-Standard-A',
     lipsyncLang: 'en',
   });
-
-  playGesture(gesture)
 
   return head1;
 }
@@ -154,6 +152,10 @@ export async function indexFingerRaise() {
   head1.playGesture('indexFingerRaise', Infinity, false, 1500);
 }
 
+export async function rightGesture() {
+  head1.playGesture('rightGesture');
+}
+
 
 export async function headNod() {
   head.playGesture('yes', 5, false, 1500);
@@ -170,6 +172,7 @@ export function setSubtitleCallback(fn) {
 
 export async function speakWithLipsync(text, character = 'doctor', onStart = null) {
   const activeHead = character === 'companion' ? head1 : head;
+  console.log("IN SPEAK W LIPSYNC")
   const ttsRes = await fetch(`${BASE_URL}/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -177,7 +180,7 @@ export async function speakWithLipsync(text, character = 'doctor', onStart = nul
   });
   
   const { audio, timestamps } = await ttsRes.json();
-  
+  console.log("GOT TTS RESPONSE")
   const lastWord = timestamps[timestamps.length - 1];
 
   const audioBytes = Uint8Array.from(atob(audio), c => c.charCodeAt(0));
@@ -216,6 +219,7 @@ export async function speakWithLipsync(text, character = 'doctor', onStart = nul
 }
 
 export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor') {
+  console.log(audioPath)
   const activeHead = character === 'companion' ? head1 : head;
   const [audioRes, tsRes] = await Promise.all([
     fetch(audioPath),
@@ -241,27 +245,73 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     }
   }
   
-  // define word -> gesture mappings here
-  const wordGestures = [
-    { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
-    { word: 'not', gesture: 'shrug',   dur: 3, transition: 2000 },
-    { word: 'show', gesture: 'talkopen',   dur: 2, transition: 1500 },
-    { word: 'one', gesture: 'indexFingerRaise',   dur: 2, transition: 1500 },
-    { word: 'type', gesture: 'talkopen',   dur: 2, transition: 1500 }
-  ];
-
   const markers = [];
   const mtimes = [];
 
-  wordGestures.forEach(({ word, gesture, dur, transition }) => {
-    const idx = timestamps.findIndex(
-      t => t.word.trim().toLowerCase().replace(/[.,!?;:]/g, '') === word
-    );
-    if (idx !== -1) {
-      markers.push(() => activeHead.playGesture(gesture, dur, false, transition));
-      mtimes.push(wtimes[idx]);
-    }
-  });
+  if (audioPath === "/intro-voices/companion-intro1.mp3") {
+    // define word -> gesture mappings here
+    const wordGestures = [
+      { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
+      { word: 'not', gesture: 'shrug',   dur: 2, transition: 2000 },
+      { word: 'where', gesture: 'chest',   dur: 1, transition: 1500 },
+      { word: 'let', gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: 'share', gesture: 'oneQuestion',   dur: 2, transition: 1500 },
+      { word: 'type', gesture: 'talkopen',   dur: 2, transition: 1500 }
+    ];
+
+    wordGestures.forEach(({ word, gesture, dur, transition }) => {
+      const idx = timestamps.findIndex(
+        t => t.word.trim().toLowerCase().replace(/[.,!?;:]/g, '') === word
+      );
+      if (idx !== -1) {
+        markers.push(() => activeHead.playGesture(gesture, dur, false, transition));
+        mtimes.push(wtimes[idx]);
+      }
+    });
+  }
+
+  if (audioPath === "/intro-voices/doctor-intro1.mp3") {
+    // define word -> gesture mappings here
+    const wordGestures = [
+      { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
+    ];
+
+    wordGestures.forEach(({ word, gesture, dur, transition }) => {
+      const idx = timestamps.findIndex(
+        t => t.word.trim().toLowerCase().replace(/[.,!?;:]/g, '') === word
+      );
+      if (idx !== -1) {
+        markers.push(() => activeHead.playGesture(gesture, dur, false, transition));
+        mtimes.push(wtimes[idx]);
+      }
+    });
+  }
+
+  if (audioPath === "/intro-voices/companion-intro2.mp3") {
+    // define word -> gesture mappings here
+    const wordGestures = [
+      { word: 'hey', gesture: 'handup',   dur: 1.5, transition: 1500 },
+      { word: 'type', gesture: 'talkopen',   dur: 1.5, transition: 1500 },
+      { word: 'if', gesture: 'oneQuestion',   dur: 2, transition: 1500 },
+      { word: 'silently', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'hover', gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: 'it', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'based', gesture: 'rightGesture',   dur: 2, transition: 1500 },
+      { word: 'hovering', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'ahead', gesture: 'talkopen',   dur: 1, transition: 1500 },
+    ];
+
+    wordGestures.forEach(({ word, gesture, dur, transition }) => {
+      const idx = timestamps.findIndex(
+        t => t.word.trim().toLowerCase().replace(/[.,!?;:]/g, '') === word
+      );
+      if (idx !== -1) {
+        markers.push(() => activeHead.playGesture(gesture, dur, false, transition));
+        mtimes.push(wtimes[idx]);
+      }
+    });
+  }
+
   activeHead.stopGesture();
   activeHead.speakAudio(
     { audio: audioBuffer, words, wtimes, wdurations, markers, mtimes },
@@ -311,10 +361,12 @@ export const gestures = {
   headNod,
   startSwiping,
   stopSwiping,
-  wave
+  wave,
+  rightGesture
   // add more here
 };
 
 export function playGesture(name) {
+  console.log("GESTURE TRIGGERED", name)
   gestures[name]?.();
 }

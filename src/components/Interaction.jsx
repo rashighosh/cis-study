@@ -39,6 +39,7 @@ export default function Interaction() {
   const messagesRef = useRef(null);
   const currentGesture = useRef('');
   const [hasSuggestion, setHasSuggestion] = useState(false);
+  const [goodQuestion, setGoodQuestion] = useState(false)
   const [companionDismissed, setCompanionDismissed] = useState(false);
   const [jordanSpeaking, setJordanSpeaking] = useState(false);
   const [subtitle, setSubtitle] = useState('');
@@ -124,6 +125,8 @@ export default function Interaction() {
   // Listening when user starts typing
   useEffect(() => {
     if (!isReady || !startTalk) return;
+    setGoodQuestion(false)
+    setHasSuggestion(false)
     clearTimeout(tipTimeout.current);
     if (buttonFlag) {
       skipNextInputEffect.current = true;
@@ -197,6 +200,8 @@ export default function Interaction() {
           playGesture("indexFingerRaise")
         } else {
           setHasSuggestion(false)
+          setGoodQuestion(true)
+          console.log("Good question is", goodQuestion)
           playGesture(data.gesture);
         }
         setShowTip(true);
@@ -213,6 +218,7 @@ export default function Interaction() {
   const handleSubmit = async () => {
     console.log("in handle submit")
     if (!input.trim()) return;
+    setGoodQuestion(false)
     const newCount = questionCount + 1;
     setQuestionCount(newCount);
     focusCharacter(1);
@@ -343,7 +349,7 @@ export default function Interaction() {
               )}
               {jordanIntro && <p className="companion-subtitle">{subtitle}</p>}
               {!jordanSpeaking && (
-                  <div className="companion-popout" style={{ '--reaction-color': r.color }}>
+                  <div className={`companion-popout ${goodQuestion ? 'popout-active' : ''}`}>
                   <div className="companion-popout-arrow" />
                   <div className="companion-info">
                     <div className="companion-meta">
@@ -414,7 +420,7 @@ export default function Interaction() {
             </div>
           </div>
         </div>
-        {questionCount >=5 && <button className="continue-btn">Continue To Post Survey  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
+        {questionCount >=5 && <button className="continue-btn" onClick={() => {continueToPostSurvey()}}>Continue To Post Survey  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
       </div>
     </div>
 
