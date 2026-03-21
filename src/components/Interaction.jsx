@@ -49,6 +49,7 @@ export default function Interaction() {
   const skipNextInputEffect = useRef(false);
   const skipOnSubmit = useRef(false);
   const [questionCount, setQuestionCount] = useState(0);
+  const [showContinueButton, setShowContinueButton] = useState(false);
   const [transcript, setTranscript] = useState([]);
   const [events, setEvents] = useState([]);
   const [reaction, setReaction] = useState({
@@ -248,6 +249,9 @@ export default function Interaction() {
         updateTranscript("alex", data.answer)
         setIsTyping(false);
       });
+      if (questionCount >= 5) {
+        setShowContinueButton(true)
+      }
     } catch (error) {
       console.error("Error details:", error);
       setMessages(m => [...m, { from: "doctor", text: "Sorry, something went wrong. Please try again." }]);
@@ -420,7 +424,7 @@ export default function Interaction() {
             </div>
           </div>
         </div>
-        {questionCount >=5 && <button className="continue-btn" onClick={() => {continueToPostSurvey()}}>Continue To Post Survey  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
+        {showContinueButton && <button className="continue-btn" onClick={() => {continueToPostSurvey()}}>Continue To Post Survey  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
       </div>
     </div>
 

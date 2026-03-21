@@ -274,6 +274,11 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
+      { word: 'lot', gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: 'hard', gesture: 'shrug',   dur: 2, transition: 1500 },
+      { word: "that's", gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: "trusted", gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: "whenever", gesture: 'rightGesture',   dur: 2, transition: 1500 },
     ];
 
     wordGestures.forEach(({ word, gesture, dur, transition }) => {
