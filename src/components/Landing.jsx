@@ -86,13 +86,13 @@ export default function Landing() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const idFromURL = params.get('id') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('condition')) || 1;
+    const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
     
     if (idFromURL && conditionFromURL) {
       logSession(idFromURL, conditionFromURL);
     }
-    console.log("Logged Session for participant_id = " + idFromURL + " and condition = " + conditionFromURL)
+    console.log("Logged Session for id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
 
   // init on slide 2

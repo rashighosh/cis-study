@@ -63,9 +63,9 @@ export default function Interaction() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const idFromURL = params.get('id') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('condition')) || 1;
+    const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
-    console.log("User ID = " + idFromURL + " and condition = " + conditionFromURL)
+    console.log("User id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
 
   // This effect handles the INITIAL ASSET LOAD
