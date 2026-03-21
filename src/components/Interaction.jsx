@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { submitQuestion, precheckQuestion } from '../api/llm.js';
-import { logMainInteraction } from '../api/logging.js';
+import { logMainInteraction, logCompletion } from '../api/logging.js';
 import { initCompanionCharacter, initDoctorCharacter, playGesture, speakWithLipsync, speakWithLipsyncStatic, stopCompanionGesture, focusCharacter, setSubtitleCallback } from '../character.js';
 import '../css/Interaction.css';
 import logo from '../assets/logo-transparent.png'
@@ -25,6 +25,7 @@ const GOOD_TIPS = [
 
 export default function Interaction() {
   const [participantId, setParticipantId] = useState('');
+  const [condition, setCondition] = useState(1);
   const [isReady, setIsReady] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -65,6 +66,7 @@ export default function Interaction() {
     const idFromURL = params.get('id') || 'rashi-test';
     const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
+    setCondition(conditionFromURL)
     console.log("User id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
 
@@ -248,6 +250,11 @@ export default function Interaction() {
     }
   };
 
+  const continueToPostSurvey = () => {
+    logCompletion(participantId)
+    window.location.href = `https://ufl.qualtrics.com/jfe/form/SV_bK3UrvC3OlLjsea?id=${participantId}&c=${condition}`;
+  };
+
   const r = reaction;
   console.log("Question count is", questionCount)
 
@@ -407,7 +414,7 @@ export default function Interaction() {
             </div>
           </div>
         </div>
-        {questionCount >=5 && <button className="continue-btn">Continue  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
+        {questionCount >=5 && <button className="continue-btn">Continue To Post Survey  <FontAwesomeIcon size="xs" icon={faArrowRight}/></button>}
       </div>
     </div>
 

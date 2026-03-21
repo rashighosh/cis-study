@@ -61,6 +61,7 @@ const steps = [
 
 export default function Landing() {
   const [participantId, setParticipantId] = useState('');
+  const [condition, setCondition] = useState(1);
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -88,6 +89,7 @@ export default function Landing() {
     const idFromURL = params.get('id') || 'rashi-test';
     const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
+    setCondition(conditionFromURL)
     
     if (idFromURL && conditionFromURL) {
       logSession(idFromURL, conditionFromURL);
@@ -196,7 +198,7 @@ export default function Landing() {
   const handleCta = () => {
     console.log("IN HANDLE CTA")
     if (isLast) {
-      window.location.href = "/interaction";
+      window.location.href = `/interaction?id=${participantId}&c=${condition}`;
       return;
     }
     if (step.type === "llm") {
