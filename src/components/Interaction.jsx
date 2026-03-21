@@ -280,13 +280,13 @@ export default function Interaction() {
                   <div className="step">
                     <div className="step-num">1</div>
                     <div className="step-content">
-                      To complete the main interaction, you must ask <b>Dr. Alex</b> at least <strong>five (5) questions</strong> during your conversation.
+                      To complete the main interaction, you must ask <b>Dr. Alex</b> at least <strong>five (5) questions</strong> during your conversation. However, you may ask as many questions as you'd like!
                     </div>
                   </div>
                   <div className="step">
                     <div className="step-num">2</div>
                     <div className="step-content">
-                      After your fifth question, a <b>Continue button</b> will appear in the <strong>bottom right corner</strong> of your screen — click it to proceed.
+                      After Dr. Alex answer's your fifth question, a <b>Continue button</b> will appear in the <strong>bottom right corner</strong> of your screen — click it to continue to the post-survey whenever you're ready.
                     </div>
                   </div>
                 </div>
