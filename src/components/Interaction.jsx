@@ -48,7 +48,7 @@ export default function Interaction() {
   const hasStarted = useRef(false);
   const skipNextInputEffect = useRef(false);
   const skipOnSubmit = useRef(false);
-  const [questionCount, setQuestionCount] = useState(0);
+  const [questionCount, setQuestionCount] = useState(1);
   const [showContinueButton, setShowContinueButton] = useState(false);
   const [transcript, setTranscript] = useState([]);
   const [events, setEvents] = useState([]);
