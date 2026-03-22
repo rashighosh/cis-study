@@ -143,6 +143,7 @@ export default function Interaction() {
     setHasSuggestion(false)
     clearTimeout(tipTimeout.current);
     if (buttonFlag) {
+      setStartCtrl(false)
       skipNextInputEffect.current = true;
       // manually set whatever reaction state you want for button-populated input
       var newReaction = {
