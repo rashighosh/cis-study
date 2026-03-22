@@ -11,51 +11,73 @@ const steps = [
   {
     id: 0,
     label: "CLINICAL TRIALS EDUCATION",
+    labelCtrl: "CLINICAL TRIALS EDUCATION",
     title: "Chat With Virtual Characters",
+    titleCtrl: "Chat With A Virtual Character",
     body: "Welcome! This tool helps you explore what it means to participate in a clinical trial — not for any specific trial, but so you're informed if you're ever faced with that decision.",
+    bodyCtrl: "Welcome! This tool helps you explore what it means to participate in a clinical trial — not for any specific trial, but so you're informed if you're ever faced with that decision.",
     cta: "What will I do?",
+    ctaCtrl: "What will I do?",
     character: false,
   },
   {
     id: 1,
     label: "HOW IT WORKS",
+    labelCtrl: "HOW IT WORKS",
     title: "Find the right questions. Get the answers you need.",
+    titleCtrl: "Find the right questions. Get the answers you need.",
     body: "You'll interact with two virtual characters: Jordan and Dr. Alex. <b>Jordan</b> will help you shape the right questions as you type. Then, <b>Dr. Alex</b> will help you find the right answer by searching multiple trusted sources.",
+    bodyCtrl: "This interaction is designed to help shape your questions as you type. Then, a virtual character, <b>Dr. Alex</b>, will help you find the right answer by searching multiple trusted sources.",
     cta: "Get ready to meet the virtual characters",
+    ctaCtrl: "Get ready to meet the virtual character",
     character: false,
   },
   {
     id: 2,
     label: "HOW IT WORKS",
+    labelCtrl: "HOW IT WORKS",
     title: "Let's get set up",
+    titleCtrl: "Let's get set up",
     body: "The <b>virtual characters</b> will interact using both <b>audio and text</b>, so please make sure your volume is turned up! For your convenience and privacy, you will interact with the virtual characters using <b>text only, by typing your questions</b>. Finally, for the best experience, please also make sure your <b>browser window is maximized</b>.",
+    bodyCtrl: "The <b>virtual character</b> will interact using both <b>audio and text</b>, so please make sure your volume is turned up! For your convenience and privacy, you will interact with the virtual character using <b>text only, by typing your questions</b>. Finally, for the best experience, please also make sure your <b>browser window is maximized</b>.",
     cta: "My volume is turned up and my window is maximized",
+    ctaCtrl: "My volume is turned up and my window is maximized",
     character: false,
   },
   {
     id: 3,
     label: "GET READY",
+    labelCtrl: "GET READY",
     title: "Get ready to meet Jordan and Dr. Alex",
+    titleCtrl: "Get ready to see how it works",
     body: "For the rest of this introduction, you will briefly meet Jordan and Dr. Alex one by one to get to know their roles. Then, you will be redirected to the actual interaction!",
+    bodyCtrl: "For the rest of this introduction, you'll first walk through how this tool helps you shape your questions. Then, you'll briefly meet Dr. Alex to to get to know their role. Finally, you will be redirected to the actual interaction!",
     cta: "Meet Jordan!",
+    ctaCtrl: "Show me how it works!",
     character: false,
   },
   {
     id: 4,
     label: "JORDAN",
+    labelCtrl: "Asking Questions",
     type: "llm",
     title: "Your Question Assistant",
+    titleCtrl: "Question Assistant",
     body: "It's not always easy to know what to ask— or even what's possible to ask. I'm here to bridge that gap. As you type, I'll give you live feedback and suggestions so you never feel lost or stuck. Just pause for a moment and I can help you shape your question into something clear and answerable.",
+    bodyCtrl: "Clinical trials can be a lot to take in — and it's not always obvious what to ask. This tool will offer tips and suggestions to help you shape your questions. So you know what to expect, let's do a quick demonstration. In the text box below, please share: what's one thing you've wondered about clinical trials? Type whatever comes to mind — it doesn't have to be perfect.",
     cta: "Done",
     character: true,
   },
   {
     id: 5,
     label: "DR ALEX",
+    labelCtrl: "DR ALEX",
     title: "Your Information Assistant",
+    titleCtrl: "Your Information Assistant",
     body: "Hi, I'm Doctor Alex! There's a lot of information out there about clinical trials — and it can be hard to know what's reliable or where to look. That's where I come in. When you ask me a question about clinical trials, I'll search through trusted sources like the National Cancer Institute to find the clearest, most relevant answer for you.",
     cta: "Let's start!",
     character: true,
+    ctrlDoctor: true,
   },
 ];
 
@@ -71,6 +93,9 @@ export default function Landing() {
   const [jordanSpeaking, setJordanSpeaking] = useState(true);
   const [subtitle, setSubtitle] = useState('');
   const [gestures, setGestures] = useState(true)
+  const [companionPresent, setCompanionPresent] = useState(true)
+  const [ctrlLLM, setCtrlLLM] = useState(false)
+  const [ctrlLLMResponse, setCtrlLLMResponse] = useState('')
   const companionRef = useRef(null);
   const doctorRef = useRef(null);
   const companionHeadRef = useRef(null);
@@ -88,11 +113,19 @@ export default function Landing() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const idFromURL = params.get('id') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('c')) || 1;
+    const conditionFromURL = parseInt(params.get('c')) ?? 1;
+    console.log("parseInt(params.get('c'))", parseInt(params.get('c')))
+    console.log(conditionFromURL)
     setParticipantId(idFromURL)
     setCondition(conditionFromURL)
+    console.log("Extracting stuff from url...")
     if (conditionFromURL === 2) {
       setGestures(false)
+      console.log("gestures?", gestures)
+    }
+    if (conditionFromURL === 0) {
+      setCompanionPresent(false)
+      console.log("is companion present?", companionPresent)
     }
     
     if (idFromURL && conditionFromURL) {
@@ -101,9 +134,10 @@ export default function Landing() {
     console.log("Logged Session for id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
 
-  // init on slide 2
+  // init companion
   useEffect(() => {
     if (!showCompanion) return;
+    if (!companionPresent) return;
     (async () => {
       setJordanSpeaking(true)
       if (!companionInitializedRef.current) {
@@ -190,13 +224,21 @@ export default function Landing() {
       const text = data.reply.response;
       sessionStorage.setItem("suggestions", JSON.stringify(data.reply.suggestions))
       console.log("STORED SUGGESTIONS IN SESSION STORAGE", sessionStorage.getItem("suggestions"))
-      await speakWithLipsync(text, 'companion', () => {
-        setJordanSpeaking(true);
+      if (companionPresent) {
+        await speakWithLipsync(text, 'companion', () => {
+          setJordanSpeaking(true);
+          setLlmDone(true);
+          setLlmLoading(false)}
+        );
+        setJordanSpeaking(false)
+        setSubtitle('');
+      } else {
         setLlmDone(true);
-        setLlmLoading(false)}
-      );
-      setJordanSpeaking(false)
-      setSubtitle('');
+        setLlmLoading(false)
+        setCtrlLLM(true)
+        const ctrlText = text.replace("I'll", "This tool will");
+        setCtrlLLMResponse(ctrlText)
+      }
     } catch (e) {
       setLlmDone(true);
     } finally {
@@ -223,12 +265,13 @@ export default function Landing() {
 
   const ctaLabel = () => {
     if (step.type === "llm") {
-      if (llmLoading) return "Jordan is thinking...";
+      if (llmLoading && companionPresent) return "Jordan is thinking...";
+      if (llmLoading && !companionPresent) return "One moment..."
       if (llmDone) return <>Meet Dr. Alex!<FontAwesomeIcon size="xs" icon={faArrowRight} /></>;
       return <>Send <FontAwesomeIcon size="xs" icon={faArrowRight} /></>;
     }
     if (isLast) return <>Let's start! <FontAwesomeIcon size="xs" icon={faArrowRight} /></>;
-    return <>{step.cta} <FontAwesomeIcon size="xs" icon={faArrowRight} /></>;
+    return <>{companionPresent ? step.cta : step.ctaCtrl} <FontAwesomeIcon size="xs" icon={faArrowRight} /></>;
   };
 
   return (
@@ -236,10 +279,10 @@ export default function Landing() {
       <img src={logo} alt="Study logo" />
 
       <div className={`landing-card ${animating ? "landing-card--hidden" : ""}`}>
-        <h2>{step.label}</h2>
-        <h1>{step.title}</h1>
+        <h2>{companionPresent ? step.label : step.labelCtrl}</h2>
+        <h1>{companionPresent ? step.title : step.titleCtrl}</h1>
 
-        {showCompanion && (
+        {showCompanion && companionPresent && (
           <div
             className="virtual-companion landing-companion"
             id="virtualcompanion"
@@ -253,11 +296,14 @@ export default function Landing() {
             ref={doctorRef}
           />
         )}
-        {step.character === true && (
+        {step.character === true && companionPresent && (
+          <p className="landing-subtitle">{subtitle}</p>
+        )}
+        {!companionPresent && step.ctrlDoctor === true && (
           <p className="landing-subtitle">{subtitle}</p>
         )}
 
-        {step.type === "llm" ? (
+        {step.type === "llm" && companionPresent ? (
           <div className={`landing-llm ${!jordanSpeaking && !llmDone ? 'visible' : 'hidden'}`}>
             <textarea
               className="landing-textarea"
@@ -272,11 +318,32 @@ export default function Landing() {
           step.id !== 4 && step.id !== 5 && step.id !== 6 && (
             <p
             className="landing-body"
-            dangerouslySetInnerHTML={{ __html: step.body }}
+            dangerouslySetInnerHTML={{ __html: companionPresent ? step.body : step.bodyCtrl }}
           />
           ) 
         )}
-        {step.character ? (
+
+        {step.type === "llm" && !companionPresent && (
+          <p
+            className="landing-body"
+            dangerouslySetInnerHTML={{ __html: ctrlLLM ? ctrlLLMResponse : step.bodyCtrl }}
+          />
+        )}
+
+        {step.type === "llm" && !companionPresent &&
+          <div className={`landing-llm ${ctrlLLM ? 'hidden' : 'visible'}`}>
+            <textarea
+              className='landing-textarea'
+              placeholder="What question comes to mind when you think of clinical trials?"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              rows={3}
+              disabled={llmLoading}
+            />
+          </div>
+        }
+
+        {step.character && companionPresent ? (
           <div>
             <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
               <button

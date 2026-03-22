@@ -38,7 +38,7 @@ export async function initDoctorCharacter(containerNode, view = 'mid') {
     lipsyncLang: 'en',
   });
   
-  focusCharacter(2)
+  // focusCharacter(2)
 
   return head;
 }
@@ -75,27 +75,27 @@ export function speakText(text) {
 }
 
 export async function shrug() {
-  head1.stopGesture(3000);
-  head1.playGesture('shrug');
+  head1?.stopGesture(3000);
+  head1?.playGesture('shrug');
 }
 
 export async function thinking() {
-  head1.stopGesture(1500);
-  head1.playGesture('think', Infinity, false, 1500);
+  head1?.stopGesture(1500);
+  head1?.playGesture('think', Infinity, false, 1500);
 }
 
 export async function thumbsup() {
-  head1.stopGesture(3000);
-  head1.playGesture('thumbup', Infinity, false, 1500);
+  head1?.stopGesture(3000);
+  head1?.playGesture('thumbup', Infinity, false, 1500);
 }
 
 export async function wave() {
-  head1.playGesture('handup');
+  head1?.playGesture('handup');
 }
 
 export async function ready() {
-  head1.stopGesture(3000);
-  head1.playGesture('ok');
+  head1?.stopGesture(3000);
+  head1?.playGesture('ok');
 }
 
 async function playSmoothSequence(head, sequence) {
@@ -138,22 +138,22 @@ export function stopSwiping() {
 }
 
 export async function lookup() {
-  head1.stopGesture(3000);
-  head1.playGesture('lookup');
+  head1?.stopGesture(3000);
+  head1?.playGesture('lookup');
 }
 
 export async function lookdown() {
-  head1.stopGesture(1500);
-  head1.playGesture('lookdown', Infinity, false, 1500);
+  head1?.stopGesture(1500);
+  head1?.playGesture('lookdown', Infinity, false, 1500);
 }
 
 export async function indexFingerRaise() {
-  head1.stopGesture(1500);
-  head1.playGesture('indexFingerRaise', Infinity, false, 1500);
+  head1?.stopGesture(1500);
+  head1?.playGesture('indexFingerRaise', Infinity, false, 1500);
 }
 
 export async function rightGesture() {
-  head1.playGesture('rightGesture');
+  head1?.playGesture('rightGesture');
 }
 
 
@@ -163,7 +163,7 @@ export async function headNod() {
 }
 
 export async function stopCompanionGesture() {
-  head1.stopGesture(3000);
+  head1?.stopGesture(3000);
 }
 
 export function setSubtitleCallback(fn) {
@@ -335,7 +335,7 @@ export async function focusCharacter(character) {
         lightDirectIntensity: 45,   // Dim directional light,
         lightSpotIntensity: 45,
       })
-      head1.setLighting({
+      head1 && head1.setLighting({
         lightDirectIntensity: 0,   // Dim directional light
       })
       document.querySelector("#virtualcompanion > canvas").classList.add("dim")
@@ -345,11 +345,11 @@ export async function focusCharacter(character) {
     head.setLighting({
       lightDirectIntensity: 0,   // Dim directional light
     })
-    head1.setLighting({
+    head1 && head1.setLighting({
       lightDirectIntensity: 45,   // Dim directional light
       lightSpotIntensity: 45,
     })
-    document.querySelector("#virtualcompanion > canvas").classList.remove("dim")
+    document.querySelector("#virtualcompanion > canvas")?.classList.remove("dim")
     document.querySelector("#virtualdoctor > canvas").classList.add("dim")
   }
 }

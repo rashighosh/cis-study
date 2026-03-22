@@ -408,6 +408,24 @@
   align-items: center;
 }
 
+.ctrl-companion {
+  width: 225px;
+  height: 225px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid var(--reaction-color);
+  border-radius: 50%;
+  margin: 15px;
+}
+
+.ctrl-companion img {
+  height: 75px;
+  width: 75px;
+}
+
 .virtual-companion > canvas {
   width: 300px;
 }

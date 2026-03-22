@@ -51,6 +51,8 @@ export default function Interaction() {
   const skipOnSubmit = useRef(false);
   const [questionCount, setQuestionCount] = useState(1);
   const [showContinueButton, setShowContinueButton] = useState(false);
+  const [companionPresent, setCompanionPresent] = useState(true)
+  const [startCtrl, setStartCtrl] = useState(true)
   const [transcript, setTranscript] = useState([]);
   const [events, setEvents] = useState([]);
   const [reaction, setReaction] = useState({
@@ -67,11 +69,14 @@ export default function Interaction() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const idFromURL = params.get('id') || 'rashi-test';
-    const conditionFromURL = parseInt(params.get('c')) || 1;
+    const conditionFromURL = parseInt(params.get('c')) ?? 1;
     setParticipantId(idFromURL)
     setCondition(conditionFromURL)
     if (conditionFromURL === 2) {
       setGestures(false)
+    }
+    if (conditionFromURL === 0) {
+      setCompanionPresent(false)
     }
     console.log("User id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
@@ -83,9 +88,12 @@ export default function Interaction() {
     (async () => {
       try {
         // 2. Load characters (using your original sequence)
-        await initCompanionCharacter(companionRef.current);
+        if (companionPresent){
+          await initCompanionCharacter(companionRef.current);
+        }
+        
         await initDoctorCharacter(doctorRef.current);
-        if (jordanIntro) {
+        if (jordanIntro && companionPresent) {
           setSubtitleCallback((chunk) => setSubtitle(chunk));
         }
         setStartTalk(true)
@@ -97,6 +105,7 @@ export default function Interaction() {
 
   useEffect(() => {
     if (!isReady || !companionRef.current || !startTalk) return;
+    if (!companionPresent) return;
     const playIntro = async () => {
       try {
         const audioFile = '/intro-voices/companion-intro2.mp3';
@@ -178,7 +187,7 @@ export default function Interaction() {
       return;
     }
     setCompanionDismissed(false);
-    focusCharacter(2)
+    if (companionPresent) {focusCharacter(2)}
     if (currentGesture.current !== "lookdown") {
       currentGesture.current = "lookdown";
       if (gestures) {
@@ -196,7 +205,7 @@ export default function Interaction() {
           gesture: "thinking",
           label: "thinking",
           color: GESTURE_COLORS["thinking"],
-          tip: "Jordan is thinking ...",
+          tip: companionPresent ? 'Jordan is thinking...' : 'One moment...',
           suggestions: null,
         })
         const data = await precheckQuestion(input);
@@ -206,6 +215,7 @@ export default function Interaction() {
         setReaction(newReactionState); // data is already { label, tip, color, emoji }
         updateTranscript("precheck", "", { precheckItem: data });
         currentGesture.current = data.gesture;
+        setStartCtrl(false)
         if (data.gesture !== "thumbsup") {
           setHasSuggestion(true)
           if (gestures) {
@@ -236,7 +246,7 @@ export default function Interaction() {
     setGoodQuestion(false)
     const newCount = questionCount + 1;
     setQuestionCount(newCount);
-    focusCharacter(1);
+    if (companionPresent) { focusCharacter(1) };
     setCompanionDismissed(true);
     console.log("SET COMPANION DISMISSED IS", companionDismissed)
     setJordanSpeaking(true)
@@ -366,20 +376,24 @@ export default function Interaction() {
             {/* Companion row — CSS vars carry the dynamic color */}
             <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
               <div className="virtual-companion-wrapper">
-                {isReady && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => gestures && playGesture(currentGesture.current)} />}
+                {isReady && companionPresent && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => gestures && playGesture(currentGesture.current)} />}
+                {isReady && !companionPresent && <div className="ctrl-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }}> <img src={logo} alt="Study logo" />Question Assistant</div>}
               </div>
+              
+              
               {hasSuggestion && (
                 <div className="companion-thinking-bubble">
                   Hmmm...
                 </div>
               )}
+              {!companionPresent && startCtrl && <p className="companion-subtitle">This is where your question assistant will provide you live feedback and suggestions. Type your questions about clinical trials below for Dr. Alex to answer. If you pause for a moment after you start typing, you'll see this area silently provide feedback and suggestions to ask. You can hover over this area to see those suggestions, and click on one to use it. Try hovering over this area to see the suggestions from the introduction, or go ahead and start typing a question below!</p>}
               {jordanIntro && <p className="companion-subtitle">{subtitle}</p>}
               {!jordanSpeaking && (
                   <div className={`companion-popout ${goodQuestion ? 'popout-active' : ''}`}>
                   <div className="companion-popout-arrow" />
                   <div className="companion-info">
                     <div className="companion-meta">
-                      <span className="companion-name">Jordan · Companion</span>
+                      <span className="companion-name">{companionPresent ? 'Jordan · Companion' : 'Question Assistant'}</span>
                       <span className="companion-label" style={{ '--reaction-color': r.color }}>
                         {r.label}
                       </span>
