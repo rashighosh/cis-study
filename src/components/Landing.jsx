@@ -70,6 +70,7 @@ export default function Landing() {
   const [llmDone, setLlmDone] = useState(false);
   const [jordanSpeaking, setJordanSpeaking] = useState(true);
   const [subtitle, setSubtitle] = useState('');
+  const [gestures, setGestures] = useState(true)
   const companionRef = useRef(null);
   const doctorRef = useRef(null);
   const companionHeadRef = useRef(null);
@@ -90,6 +91,9 @@ export default function Landing() {
     const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
     setCondition(conditionFromURL)
+    if (conditionFromURL === 2) {
+      setGestures(false)
+    }
     
     if (idFromURL && conditionFromURL) {
       logSession(idFromURL, conditionFromURL);
@@ -113,7 +117,7 @@ export default function Landing() {
       try {
         setJordanSpeaking(true);
         setSubtitle('');
-        await speakWithLipsyncStatic(audioFile, timestampFile, 'companion');
+        await speakWithLipsyncStatic(audioFile, timestampFile, 'companion', gestures);
       } finally {
         setJordanSpeaking(false);
         setSubtitle('');
@@ -136,7 +140,8 @@ export default function Landing() {
         await speakWithLipsyncStatic(
           '/intro-voices/doctor-intro1.mp3',
           '/intro-voices/doctor-intro-timestamps1.json',
-          'doctor'
+          'doctor',
+          gestures
         );
       } finally {
         setJordanSpeaking(false);
@@ -162,13 +167,17 @@ export default function Landing() {
     }
     if (!isTypingRef.current) {
       isTypingRef.current = true;
-      playGesture('lookdown');
+      if (gestures) {
+        playGesture('lookdown');
+      }
     }
   }, [userInput])
 
   const fetchLlmResponse = async () => {
     console.log("IN FETCH LLM RESPONSE")
-    playGesture('thinking')
+    if (gestures) {
+      playGesture('thinking')
+    }
     if (!userInput.trim() || llmLoading) return;
     setLlmLoading(true);
     setLlmDone(false);

@@ -218,7 +218,7 @@ export async function speakWithLipsync(text, character = 'doctor', onStart = nul
   });
 }
 
-export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor') {
+export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor', gestures = false) {
   console.log(audioPath)
   const activeHead = character === 'companion' ? head1 : head;
   const [audioRes, tsRes] = await Promise.all([
@@ -248,7 +248,7 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
   const markers = [];
   const mtimes = [];
 
-  if (audioPath === "/intro-voices/companion-intro1.mp3") {
+  if (audioPath === "/intro-voices/companion-intro1.mp3" && gestures) {
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
@@ -270,7 +270,7 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     });
   }
 
-  if (audioPath === "/intro-voices/doctor-intro1.mp3") {
+  if (audioPath === "/intro-voices/doctor-intro1.mp3" && gestures) {
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
@@ -292,7 +292,7 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     });
   }
 
-  if (audioPath === "/intro-voices/companion-intro2.mp3") {
+  if (audioPath === "/intro-voices/companion-intro2.mp3" && gestures) {
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hey', gesture: 'handup',   dur: 1.5, transition: 1500 },

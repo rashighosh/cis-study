@@ -45,6 +45,7 @@ export default function Interaction() {
   const [subtitle, setSubtitle] = useState('');
   const [startTalk, setStartTalk] = useState('');
   const [jordanIntro, setJordanIntro] = useState(true);
+  const [gestures, setGestures] = useState(true)
   const hasStarted = useRef(false);
   const skipNextInputEffect = useRef(false);
   const skipOnSubmit = useRef(false);
@@ -69,6 +70,9 @@ export default function Interaction() {
     const conditionFromURL = parseInt(params.get('c')) || 1;
     setParticipantId(idFromURL)
     setCondition(conditionFromURL)
+    if (conditionFromURL === 2) {
+      setGestures(false)
+    }
     console.log("User id = " + idFromURL + " and c = " + conditionFromURL)
   }, []);
 
@@ -140,7 +144,9 @@ export default function Interaction() {
         suggestions: null,
       }
       setReaction(newReaction);
-      playGesture("thumbsup");
+      if (gestures) {
+        playGesture("thumbsup");
+      }
       currentGesture.current = "thumbsup";
       setHasSuggestion(false)
       setShowTip(true);
@@ -175,12 +181,16 @@ export default function Interaction() {
     focusCharacter(2)
     if (currentGesture.current !== "lookdown") {
       currentGesture.current = "lookdown";
-      playGesture('lookdown');
+      if (gestures) {
+        playGesture('lookdown');
+      }
     }
     clearTimeout(tipTimeout.current);
     tipTimeout.current = setTimeout(async () => {
       try {
-        playGesture("thinking")
+        if (gestures) {
+          playGesture("thinking")
+        }
         currentGesture.current = "thinking"
         setReaction({
           gesture: "thinking",
@@ -198,12 +208,16 @@ export default function Interaction() {
         currentGesture.current = data.gesture;
         if (data.gesture !== "thumbsup") {
           setHasSuggestion(true)
-          playGesture("indexFingerRaise")
+          if (gestures) {
+            playGesture("indexFingerRaise")
+          }
         } else {
           setHasSuggestion(false)
           setGoodQuestion(true)
           console.log("Good question is", goodQuestion)
-          playGesture(data.gesture);
+          if (gestures) {
+            playGesture(data.gesture);
+          }
         }
         setShowTip(true);
       } catch {
@@ -232,17 +246,25 @@ export default function Interaction() {
     // add user's message to transcript
     updateTranscript("user", userMsg)
     setInput("");
-    playGesture('lookup')
+    if (gestures) {
+      playGesture('lookup')
+    }
     setShowTip(false);
     setIsTyping(true);
-    playGesture('startSwiping')
+    if (gestures) {
+      playGesture('startSwiping')
+    }
+    
     setShowCards(true);    
     try {
       const data = await submitQuestion(userMsg);
       // Do this:
       await speakWithLipsync(data.answer, 'doctor', () => {
-        playGesture('stopSwiping')
-        playGesture('headNod')
+        if (gestures) {
+          playGesture('stopSwiping')
+          playGesture('headNod')
+        }
+        
         setShowCards(false);
         setMessages(m => [...m, { from: "doctor", text: data.answer }]);
         // add dr alex's response to transcript
@@ -344,7 +366,7 @@ export default function Interaction() {
             {/* Companion row — CSS vars carry the dynamic color */}
             <div className={`companion-row ${companionDismissed ? "companion-row--dismissed" : ""}`}>
               <div className="virtual-companion-wrapper">
-                {isReady && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => { playGesture(currentGesture.current)}} />}
+                {isReady && <div className="virtual-companion" id="virtualcompanion" ref={companionRef} style={{ '--reaction-color': r.color }} onMouseEnter={() => gestures && playGesture(currentGesture.current)} />}
               </div>
               {hasSuggestion && (
                 <div className="companion-thinking-bubble">
