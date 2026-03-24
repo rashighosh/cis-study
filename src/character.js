@@ -335,7 +335,7 @@ export async function focusCharacter(character) {
         lightDirectIntensity: 45,   // Dim directional light,
         lightSpotIntensity: 45,
       })
-      head1 && head1.setLighting({
+      head1.setLighting({
         lightDirectIntensity: 0,   // Dim directional light
       })
       document.querySelector("#virtualcompanion > canvas").classList.add("dim")
@@ -345,11 +345,11 @@ export async function focusCharacter(character) {
     head.setLighting({
       lightDirectIntensity: 0,   // Dim directional light
     })
-    head1 && head1.setLighting({
+    head1.setLighting({
       lightDirectIntensity: 45,   // Dim directional light
       lightSpotIntensity: 45,
     })
-    document.querySelector("#virtualcompanion > canvas")?.classList.remove("dim")
+    document.querySelector("#virtualcompanion > canvas").classList.remove("dim")
     document.querySelector("#virtualdoctor > canvas").classList.add("dim")
   }
 }
