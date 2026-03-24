@@ -79,6 +79,7 @@ export default function Interaction() {
       setCompanionPresent(false)
     }
     console.log("User id = " + idFromURL + " and c = " + conditionFromURL)
+    console.log("gestures is", gestures)
   }, []);
 
   // This effect handles the INITIAL ASSET LOAD

@@ -38,7 +38,7 @@ export async function initDoctorCharacter(containerNode, view = 'mid') {
     lipsyncLang: 'en',
   });
   
-  // focusCharacter(2)
+  focusCharacter(2)
 
   return head;
 }
@@ -62,7 +62,7 @@ export async function initCompanionCharacter(containerNode) {
     ttsVoice: 'en-GB-Standard-A',
     lipsyncLang: 'en',
   });
-
+  
   return head1;
 }
 
@@ -218,7 +218,7 @@ export async function speakWithLipsync(text, character = 'doctor', onStart = nul
   });
 }
 
-export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor', gestures = false) {
+export async function speakWithLipsyncStatic(audioPath, timestampsPath, character = 'doctor', gestures = true) {
   console.log(audioPath)
   const activeHead = character === 'companion' ? head1 : head;
   const [audioRes, tsRes] = await Promise.all([
