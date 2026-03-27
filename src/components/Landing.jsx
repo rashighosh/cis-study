@@ -343,7 +343,22 @@ export default function Landing() {
           </div>
         }
 
-        {step.character && companionPresent ? (
+        {step.character && companionPresent && (
+          <div>
+            <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
+              <button
+                className="landing-button"
+                onClick={handleCta}
+                disabled={ctaDisabled || llmLoading}
+              >
+                {ctaLabel()}
+              </button>
+            </div>
+          </div>
+        )
+        }
+
+        {step.character && !companionPresent && step.id !== 4 ? (
           <div>
             <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
               <button
@@ -365,21 +380,7 @@ export default function Landing() {
                 {ctaLabel()}
               </button>
             </div> 
-        )}
-
-        {step.character && !companionPresent && step.id !== 4 && (
-          <div>
-            <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
-              <button
-                className="landing-button"
-                onClick={handleCta}
-                disabled={ctaDisabled || llmLoading}
-              >
-                {ctaLabel()}
-              </button>
-            </div>
-          </div>
-        )}
+            )}
         
       </div>
       
