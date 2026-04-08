@@ -343,7 +343,7 @@ export default function Landing() {
           </div>
         }
 
-              {step.character && companionPresent ? (
+        {step.character && companionPresent ? (
           <div>
             <div className={`landing-buttons ${jordanSpeaking ? 'hidden' : 'visible'}`}>
               <button
@@ -381,6 +381,7 @@ export default function Landing() {
           </div>
         )}
         
+      </div>
       
 
       <div className="landing-dots">
