@@ -16,11 +16,19 @@ const GESTURE_COLORS = {
   shrug:    "#6366f1",
 };
 
+const LABEL_INDICATIONS = {
+  vague: ["Hmm...", "Do you mean...?"],
+  thoughtful: ["Ah, yes...", "Right, right..."],
+  unknown: ["Maybe...", "Let's see..."],
+  ready: ["All set!", "Looks good."],
+  good: ["Yes, good question!", "Nice."]
+}
+
 const GOOD_TIPS = [
-  "This question looks good!",
+  "Yeah, this is good to ask!",
   "I like this -- good question!",
-  "That's a great question!",
-  "I think this is a solid question!",
+  "Yes, you should ask this!",
+  "Nice, solid question!",
 ];
 
 export default function Interaction() {
@@ -385,7 +393,7 @@ export default function Interaction() {
               
               {hasSuggestion && (
                 <div className="companion-thinking-bubble">
-                  Hmmm...
+                  {LABEL_INDICATIONS[r.label]?.[Math.floor(Math.random() * LABEL_INDICATIONS[r.label].length)] ?? "NONE"}
                 </div>
               )}
               {!companionPresent && startCtrl && <p className="companion-subtitle">This is where your question assistant will provide you live feedback and suggestions. Type your questions about clinical trials below for Dr. Alex to answer. If you pause for a moment after you start typing, you'll see this area silently provide feedback and suggestions to ask. You can hover over this area to see those suggestions, and click on one to use it. Try hovering over this area to see the suggestions from the introduction, or go ahead and start typing a question below!</p>}

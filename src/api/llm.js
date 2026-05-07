@@ -1,8 +1,8 @@
 import { data } from "react-router";
 
 // const BASE_URL = 'https://fastapi-rashi.onrender.com';
-// const BASE_URL = 'http://127.0.0.1:8000';
-const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
+const BASE_URL = 'http://127.0.0.1:8000';
+// const BASE_URL = 'https://brcco3c42yqwcnqmvj4h2k2igu0fysxd.lambda-url.us-east-1.on.aws'
 
 
 export async function submitQuestion(message) {
