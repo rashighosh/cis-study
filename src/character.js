@@ -252,11 +252,13 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
-      { word: 'not', gesture: 'shrug',   dur: 2, transition: 2000 },
-      { word: 'where', gesture: 'chest',   dur: 1, transition: 1500 },
-      { word: 'let', gesture: 'talkopen',   dur: 2, transition: 1500 },
-      { word: 'share', gesture: 'oneQuestion',   dur: 2, transition: 1500 },
-      { word: 'type', gesture: 'talkopen',   dur: 2, transition: 1500 }
+      { word: 'like', gesture: 'talkopen',   dur: 2, transition: 2000 },
+      { word: 'even', gesture: 'shrug',   dur: 1.5, transition: 1500 },
+      { word: 'where', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'help', gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: 'second', gesture: 'rightGesture',   dur: 1.5, transition: 1500 },
+      { word: 'type', gesture: 'oneQuestion',   dur: 2, transition: 1500 },
+      { word: `doesn't`, gesture: 'talkopen',   dur: 1.5, transition: 1500 },
     ];
 
     wordGestures.forEach(({ word, gesture, dur, transition }) => {
@@ -274,7 +276,7 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hi', gesture: 'handup',   dur: 2, transition: 1500 },
-      { word: 'lot', gesture: 'talkopen',   dur: 2, transition: 1500 },
+      { word: 'like', gesture: 'shrug',   dur: 2, transition: 1500 },
       { word: 'hard', gesture: 'shrug',   dur: 2, transition: 1500 },
       { word: "that's", gesture: 'chest',   dur: 2, transition: 1500 },
       { word: "trusted", gesture: 'talkopen',   dur: 2, transition: 1500 },
@@ -296,14 +298,13 @@ export async function speakWithLipsyncStatic(audioPath, timestampsPath, characte
     // define word -> gesture mappings here
     const wordGestures = [
       { word: 'hey', gesture: 'handup',   dur: 1.5, transition: 1500 },
-      { word: 'type', gesture: 'talkopen',   dur: 1.5, transition: 1500 },
-      { word: 'if', gesture: 'oneQuestion',   dur: 2, transition: 1500 },
-      { word: 'silently', gesture: 'chest',   dur: 2, transition: 1500 },
-      { word: 'hover', gesture: 'talkopen',   dur: 2, transition: 1500 },
-      { word: 'it', gesture: 'chest',   dur: 2, transition: 1500 },
-      { word: 'based', gesture: 'rightGesture',   dur: 2, transition: 1500 },
-      { word: 'hovering', gesture: 'chest',   dur: 2, transition: 1500 },
-      { word: 'ahead', gesture: 'talkopen',   dur: 1, transition: 1500 },
+      { word: 'ask', gesture: 'talkopen',   dur: 1.5, transition: 1500 },
+      { word: 'Alex', gesture: 'rightGesture',   dur: 1.5, transition: 1500 },
+      { word: 'seconds', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'thoughts', gesture: 'rightGesture',   dur: 1.5, transition: 1500 },
+      { word: 'helpful', gesture: 'chest',   dur: 2, transition: 1500 },
+      { word: 'already', gesture: 'rightGesture',   dur: 1.5, transition: 1500 },
+      { word: 'start', gesture: 'talkopen',   dur: 1.5, transition: 1500 },
     ];
 
     wordGestures.forEach(({ word, gesture, dur, transition }) => {

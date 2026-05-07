@@ -17,7 +17,7 @@ const GESTURE_COLORS = {
 };
 
 const LABEL_INDICATIONS = {
-  vague: ["Hmm...", "Do you mean...?"],
+  vague: ["Hmm...", "What about...?"],
   thoughtful: ["Ah, yes...", "Right, right..."],
   unknown: ["Maybe...", "Let's see..."],
   ready: ["All set!", "Looks good."],
